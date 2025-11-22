@@ -1,5 +1,7 @@
 {
     "type": "project",
+    "name": "olecarl/api",
+    "description": "RESTful Web-API using Symfony with API-Platform",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -9,7 +11,7 @@
         "ext-iconv": "*",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
-        "symfony/flex": "^2",
+        "symfony/flex": "^2.10",
         "symfony/framework-bundle": "7.3.*",
         "symfony/runtime": "7.3.*",
         "symfony/yaml": "7.3.*"
