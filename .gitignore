@@ -16,9 +16,11 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-/.phpunit.cache/
+*.cache
 ###< phpunit/phpunit ###
 
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+tests/Support/_generated
