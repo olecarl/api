@@ -1,6 +1,14 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
+
+    # Swagger UI.
+    enable_swagger_ui: true
+    enable_swagger: true
+    enable_entrypoint: false
+    enable_docs: true
+    enable_profiler: true
+
     defaults:
         stateless: true
         cache_headers:
