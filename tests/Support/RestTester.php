@@ -2,20 +2,10 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Tests\Support;
 
 /**
- * Inherited Methods.
- *
+ * Inherited Methods
  * @method void wantTo($text)
  * @method void wantToTest($text)
  * @method void execute($callable)
@@ -28,12 +18,12 @@ namespace App\Tests\Support;
  * @method void pause($vars = [])
  *
  * @SuppressWarnings(PHPMD)
- */
-class ApiTester extends \Codeception\Actor
+*/
+class RestTester extends \Codeception\Actor
 {
-    use _generated\ApiTesterActions;
+    use _generated\RestTesterActions;
 
-    /*
+    /**
      * Define custom actions here
      */
 }

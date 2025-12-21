@@ -89,11 +89,11 @@
         }
     },
     "require-dev": {
-        "codeception/codeception": "^5.3",
-        "codeception/module-asserts": "^3.2",
+        "codeception/codeception": "^5.3.3",
+        "codeception/module-asserts": "^3.2.1",
         "codeception/module-doctrine": "^3.3",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-rest": "^3.4",
+        "codeception/module-phpbrowser": "^3.0.2",
+        "codeception/module-rest": "^3.4.1",
         "codeception/module-symfony": "^3.8",
         "friendsofphp/php-cs-fixer": "^3.92.3",
         "phpstan/phpstan": "^2.1.33",

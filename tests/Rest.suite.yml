@@ -1,0 +1,12 @@
+actor: RestTester
+suite_namespace: App\Tests\Rest
+modules:
+    enabled:
+        - REST:
+            depends: PhpBrowser
+            url: &url 'https://api.ddev.site'
+    config:
+        PhpBrowser:
+            url: *url
+            headers:
+                Content-Type: application/json
