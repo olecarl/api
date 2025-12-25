@@ -12,11 +12,11 @@
         "ext-pdo_sqlite": "*",
         "api-platform/doctrine-orm": "^4.2.11",
         "api-platform/symfony": "^4.2.11",
-        "doctrine/doctrine-bundle": "^3.1",
+        "doctrine/doctrine-bundle": "^3.2.1",
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/orm": "^3.6.0",
         "nelmio/cors-bundle": "^2.6",
-        "phpdocumentor/reflection-docblock": "^5.6.5",
+        "phpdocumentor/reflection-docblock": "^5.6.6",
         "phpstan/phpdoc-parser": "^2.3",
         "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
@@ -69,8 +69,10 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script",
+            "vendor/bin/codecept build": "script",
             "php-cs-fixer fix": "script",
-            "phpstan analyse": "script"
+            "phpstan analyse": "script",
+            "vendor/bin/codecept run": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -90,10 +92,10 @@
     },
     "require-dev": {
         "codeception/codeception": "^5.3.3",
-        "codeception/module-asserts": "^3.2.1",
+        "codeception/module-asserts": "^3.3.0",
         "codeception/module-doctrine": "^3.3",
         "codeception/module-phpbrowser": "^3.0.2",
-        "codeception/module-rest": "^3.4.1",
+        "codeception/module-rest": "^3.4.3",
         "codeception/module-symfony": "^3.8",
         "friendsofphp/php-cs-fixer": "^3.92.3",
         "phpstan/phpstan": "^2.1.33",

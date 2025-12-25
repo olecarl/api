@@ -217,7 +217,7 @@
      <li> <a href="#" title="Useless" onClick="toggleScenarios('scenarioUseless', this.parentElement)"><strong>U</strong> 0</a></li>
    </ul>
  <div class="layout">
- <h1>Codeception Results <small><span style="color: green">OK</span> (00:00.303)</small></h1>
+ <h1>Codeception Results <small><span style="color: green">OK</span> (00:00.306)</small></h1>
 
 
 
@@ -233,7 +233,7 @@
 </tr>   <tr class="scenarioRow scenarioSuccess">
     <td>
      <p class="scenarioSuccess" onclick="showHide('1', this)"><span class="toggle">+</span>
-          <span class="quiet">ApiEntryCest &raquo;</span> Test api entry <span style="color: #34495e; font-size: 70%;">0.08s</span></p>
+          <span class="quiet">ApiDocsCest &raquo;</span> Try to access api docs <span style="color: #34495e; font-size: 70%;">0.09s</span></p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -242,11 +242,39 @@
 
 
       <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;text/html&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>As a website user</strong></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>I am going to access api docs</strong></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/docs&quot;</span></td>
       </tr>
 
       <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>I expect valid html response</strong></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is successful</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;text/html&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>I expect to see the title</strong></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see <span style="color: #732E81">&quot;Hello API Platform&quot;</span></td>
       </tr>
 
 
@@ -276,7 +304,19 @@
 
 
       <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>As an API user</strong></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>I am going to access api entrypoint</strong></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send get <span style="color: #732E81">&quot;/docs&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;<strong>I expect valid json response</strong></td>
       </tr>
 
       <tr>
