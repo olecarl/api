@@ -32,6 +32,5 @@ final class ApiDocsCest
         $I->haveHttpHeader('Content-Type', 'text/html');
         $I->expectTo('see the title');
         $I->see('Hello API Platform');
-        // $I->seeLink('API Platform');
     }
 }

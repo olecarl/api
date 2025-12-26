@@ -1,6 +1,8 @@
 api_platform:
     title: Hello API Platform
+    description: 'Welcome to the Hello World API of APIs, powered by API Platform.'
     version: 1.0.0
+    show_webby: false
 
     # Swagger UI.
     enable_swagger_ui: true
