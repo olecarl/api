@@ -91,6 +91,7 @@
         }
     },
     "require-dev": {
+        "api-platform/schema-generator": "^5.2.4",
         "codeception/codeception": "^5.3.3",
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-doctrine": "^3.3",
