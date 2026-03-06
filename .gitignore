@@ -25,3 +25,8 @@ phpstan.neon
 
 tests/Support/_generated
 tests/_output/
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###

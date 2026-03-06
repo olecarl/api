@@ -19,6 +19,7 @@
         "phpdocumentor/reflection-docblock": "^6.0.2",
         "phpstan/phpdoc-parser": "^2.3.2",
         "symfony/asset": "^8.0.6",
+        "symfony/asset-mapper": "^7.4.6",
         "symfony/console": "^8.0.6",
         "symfony/dotenv": "^8.0.6",
         "symfony/expression-language": "^8.0.4",
@@ -69,11 +70,12 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script",
-            "composer validate" : "script",
+            "composer validate": "script",
             "vendor/bin/codecept build": "script",
             "php-cs-fixer fix": "script",
             "phpstan analyse": "script",
-            "vendor/bin/codecept run": "script"
+            "vendor/bin/codecept run": "script",
+            "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
