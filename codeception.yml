@@ -17,3 +17,14 @@ settings:
     shuffle: true
     colors: true
     report_useless_tests: true
+
+coverage:
+    enabled: true
+    c3_url: 'https://api.ddev.site'
+    low_limit: 30
+    high_limit: 60
+    show_only_summary: false
+    include:
+        - public/*
+        - src/*
+        - config/*
