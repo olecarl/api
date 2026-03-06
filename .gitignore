@@ -30,3 +30,5 @@ tests/_output/
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+/build/*

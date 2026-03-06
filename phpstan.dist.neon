@@ -2,7 +2,4 @@ parameters:
     level: 10
     paths:
         - src/
-        - tests/
         - config/
-    excludePaths:
-        - tests/Support/

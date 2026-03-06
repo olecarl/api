@@ -66,17 +66,21 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
+        "test": [
+            "vendor/bin/codecept run --steps --html --version",
+            "vendor/bin/phpstan --version analyse",
+            "vendor/bin/phpmetrics --git --version --report-html=./build/phpmetrics/ ."
+        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script",
             "composer validate": "script",
-            "vendor/bin/codecept build": "script",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd",
             "php-cs-fixer fix": "script",
-            "phpstan analyse": "script",
-            "vendor/bin/codecept run": "script",
-            "importmap:install": "symfony-cmd"
+            "vendor/bin/codecept build": "script"
         },
+
         "post-install-cmd": [
             "@auto-scripts"
         ],
