@@ -43,5 +43,5 @@ jobs:
         touch data/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
-      run: bin/phpunit
+        DATABASE_URL: sqlite:///%kernel.project_dir%/var/data/database.sqlite
+      run: vendor/bin/codecept run
