@@ -11,6 +11,8 @@
         "ext-iconv": "*",
         "ext-pdo_sqlite": "*",
         "api-platform/doctrine-orm": "^4.2.20",
+        "api-platform/hal": "^4.2",
+        "api-platform/json-api": "*",
         "api-platform/symfony": "^4.2.20",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
@@ -71,12 +73,13 @@
         "test": [
             "vendor/bin/phpstan analyse",
             "vendor/bin/codecept run --steps --html",
-            "vendor/bin/phpmetrics --git -report-html=./build/phpmetrics/ ."
+            "vendor/bin/phpmetrics --git --report-html=./build/phpmetrics/ ."
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "requirements-checker": "script",
             "composer validate": "script",
+            "composer audit": "script",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd",
             "php-cs-fixer fix": "script",
