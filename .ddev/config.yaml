@@ -1,33 +1,26 @@
-name: api
-type: symfony
 docroot: public
-php_version: "8.4"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
-database:
-    type: mariadb
-    version: "10.11"
 use_dns_when_possible: true
-composer_version: "2"
 web_environment: []
 corepack_enable: false
 
 # Key features of DDEV's config.yaml:
 
-# name: <projectname> # Name of the project, automatically provides
+name: api
 #   http://projectname.ddev.site and https://projectname.ddev.site
 # If the name is omitted, the project will take the name of the enclosing directory,
 # which is useful if you want to have a copy of the project side by side with this one.
 
-# type: <projecttype>  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
+type: symfony  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
 # See https://ddev.readthedocs.io/en/stable/users/quickstart/ for more
 # information on the different project types
 
 # docroot: <relative_path> # Relative path to the directory containing index.php.
 
-# php_version: "8.3"  # PHP version to use, "5.6" through "8.4"
+php_version: "8.4"  # PHP version to use, "5.6" through "8.4"
 
 # You can explicitly specify the webimage but this
 # is not recommended, as the images are often closely tied to DDEV's' behavior,
@@ -35,9 +28,9 @@ corepack_enable: false
 
 # webimage: <docker_image>  # nginx/php docker image.
 
-# database:
-#   type: <dbtype> # mysql, mariadb, postgres
-#   version: <version> # database version, like "10.11" or "8.0"
+database:
+    type: mariadb
+    version: "10.11"
 #   MariaDB versions can be 5.5-10.8, 10.11, and 11.4.
 #   MySQL versions can be 5.5-8.0.
 #   PostgreSQL versions can be 9-17.
@@ -74,7 +67,7 @@ corepack_enable: false
 
 # webserver_type: nginx-fpm, apache-fpm, generic
 
-# timezone: Europe/Berlin
+timezone: Europe/Berlin
 # If timezone is unset, DDEV will attempt to derive it from the host system timezone
 # using the $TZ environment variable or the /etc/localtime symlink.
 # This is the timezone used in the containers and by PHP;
@@ -87,7 +80,7 @@ corepack_enable: false
 # the directory which contains the composer.json and where all Composer related
 # commands are executed.
 
-# composer_version: "2"
+composer_version: "2"
 # You can set it to "" or "2" (default) for Composer v2 or "1" for Composer v1
 # to use the latest major version available at the time your container is built.
 # It is also possible to use each other Composer version channel. This includes:
