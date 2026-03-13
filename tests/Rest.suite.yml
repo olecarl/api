@@ -4,7 +4,7 @@ modules:
     enabled:
         - REST:
             depends: PhpBrowser
-            url: &url 'https://api.ddev.site'
+            url: &url localhost
     config:
         PhpBrowser:
             url: *url
