@@ -4,7 +4,7 @@ modules:
     enabled:
         - REST:
             depends: PhpBrowser
-            url: &url localhost
+            url: &url 'https://localhost'
     config:
         PhpBrowser:
             url: *url
