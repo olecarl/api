@@ -10,10 +10,10 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-pdo_sqlite": "*",
-        "api-platform/doctrine-orm": "^4.2.20",
-        "api-platform/hal": "^4.2",
-        "api-platform/json-api": "*",
-        "api-platform/symfony": "^4.2.20",
+        "api-platform/doctrine-orm": "^4.3",
+        "api-platform/hal": "^4.3",
+        "api-platform/json-api": "^4.3",
+        "api-platform/symfony": "^4.3",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6.2",
@@ -70,15 +70,19 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
+        "inspect": [
+            "composer audit",
+            "vendor/bin/phpstan analyse --memory-limit=2G"
+        ],
         "test": [
-            "vendor/bin/phpstan analyse",
-            "vendor/bin/codecept run --steps --html",
+            "vendor/bin/php-cs-fixer fix ./src",
+            "vendor/bin/codecept run --html",
             "vendor/bin/phpmetrics --git --report-html=./build/phpmetrics/ ."
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "requirements-checker": "script",
-            "composer validate": "script",
+            "composer validate --strict": "script",
             "composer audit": "script",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd",
