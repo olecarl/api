@@ -2,11 +2,9 @@ actor: RestTester
 suite_namespace: App\Tests\Rest
 modules:
     enabled:
+        - Asserts
+        - Symfony:
+            app_path: 'src'
+            environment: 'test'
         - REST:
-            depends: PhpBrowser
-            url: &url 'https://api.ddev.site'
-    config:
-        PhpBrowser:
-            url: *url
-            headers:
-                Content-Type: application/json
+            depends: Symfony
