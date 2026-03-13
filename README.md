@@ -37,10 +37,10 @@ Launch adminer database management tool in browser: `ddev adminer`
 
 ## Testing
 
-Run Codeception testsuite: `ddev php vendor/bin/codecept run`
+Run Codeception testsuite: `ddev composer run test`
+
+## Code Inspection
+
+Run Static code analysis: `ddev composer run inspect`
 
 See Composer scripts in `composer.json` for more testing and analysis tools.
-
-## Maintenance
-
-Run `ddev composer audit` to find abadoned packages.

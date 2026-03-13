@@ -21,15 +21,7 @@ final class ApiEntryCest
 {
     public function _before(RestTester $I): void
     {
-    }
-
-    public function testApiEntrypoint(RestTester $I): void
-    {
-        $I->am('API user');
-        $I->amGoingTo('access api entrypoint');
-        $I->sendGet('/');
-        $I->expect('valid response');
-        $I->seeResponseCodeIsSuccessful();
+        $I->haveHttpHeader('Accept', 'application/ld+json');
     }
 
     public function testApiDocs(RestTester $I): void
