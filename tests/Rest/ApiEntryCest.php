@@ -27,6 +27,15 @@ final class ApiEntryCest
     {
         $I->am('API user');
         $I->amGoingTo('access api entrypoint');
+        $I->sendGet('/');
+        $I->expect('valid response');
+        $I->seeResponseCodeIsSuccessful();
+    }
+
+    public function testApiDocs(RestTester $I): void
+    {
+        $I->am('API user');
+        $I->amGoingTo('access api docs');
         $I->sendGet('/docs');
         $I->expect('valid json response');
         $I->seeResponseCodeIsSuccessful();
