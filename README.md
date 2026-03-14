@@ -5,12 +5,26 @@ Local Development Environment managed by DDEV using DOCKER containers.
 
 ## Features
 
+- Content Negotiation
+- Semantic Versioning
+- Continous Integration
+- Automated Testing
+- Code Coverage
+- CORS
+- OpenAPI 3.0
+
+## Tools
+
+- PHP 8.4
 - Symfony 7.4
 - API Platform 4.2
+- Doctrine ORM 3.1
 - PHPStan 2.1
-- PHPUnit 12.5
 - Codeception 5.3
 - PhpMetrics v2.9
+- PHPUnit 12.5
+- PHP CS Fixer 3.12
+- PHP Metrics 2.11
 
 ## Requirements
 
@@ -21,7 +35,7 @@ Local Development Environment managed by DDEV using DOCKER containers.
 
 Clone the project from GitHub: `git clone https://github.com/olecarl/api`
 
-Install required PHP dependencies: `ddev composer install`
+Install required PHP dependencies: `composer install`
 
 ## Usage
 
