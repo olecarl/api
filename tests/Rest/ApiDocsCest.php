@@ -17,28 +17,20 @@ use App\Tests\Support\RestTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 
-final class ApiEntryCest
+final class ApiDocsCest
 {
     public function _before(RestTester $I): void
     {
         $I->haveHttpHeader('Accept', 'application/ld+json');
     }
 
-    #[DataProvider('formatProvider')]
-    public function trySupportedFormats(RestTester $I, Example $example): void
+    public function testApiDocs(RestTester $I): void
     {
-        $I->am('API_USER');
-        $I->expect('content type is "'.$example['accept'].'"');
-        $I->haveHttpHeader('accept', $example['accept']);
-        $I->send('GET', '/');
+        $I->am('API user');
+        $I->amGoingTo('access api docs');
+        $I->sendGet('/docs');
+        $I->expect('valid json response');
         $I->seeResponseCodeIsSuccessful();
-    }
-
-    private function formatProvider(): array
-    {
-        return [
-            ['accept' => 'application/ld+json'],
-            ['accept' => 'application/json'],
-        ];
+        $I->seeResponseIsJson();
     }
 }

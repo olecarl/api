@@ -9,7 +9,6 @@ Local Development Environment managed by DDEV using DOCKER containers.
 - Semantic Versioning
 - Continous Integration
 - Automated Testing
-- Code Coverage
 - CORS
 - OpenAPI 3.0
 
@@ -25,6 +24,7 @@ Local Development Environment managed by DDEV using DOCKER containers.
 - PHPUnit 12.5
 - PHP CS Fixer 3.12
 - PHP Metrics 2.11
+- Foundry 2.9
 
 ## Requirements
 
