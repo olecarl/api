@@ -71,12 +71,15 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
-        "validate": [
+        "lint": [
             "composer validate --strict",
-            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose"
+            "vendor/bin/php-cs-fixer fix"
         ],
         "test": [
+            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
             "vendor/bin/phpstan analyse",
+            "bin/console lint:container",
+            "bin/console doctrine:schema:validate --skip-sync",
             "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
