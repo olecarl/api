@@ -114,6 +114,7 @@
         "codeception/module-phpbrowser": "^3.0.2",
         "codeception/module-rest": "^3.4.3",
         "codeception/module-symfony": "^3.8",
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.94.2",
         "phpmetrics/phpmetrics": "^2.9.1",
         "phpstan/phpstan": "^2.1.40",
@@ -123,6 +124,7 @@
         "symfony/maker-bundle": "^1.66.0",
         "symfony/panther": "^2.4",
         "symfony/stopwatch": "^7.4",
-        "symfony/web-profiler-bundle": "^7.4.7"
+        "symfony/web-profiler-bundle": "^7.4.7",
+        "zenstruck/foundry": "^2.9"
     }
 }
