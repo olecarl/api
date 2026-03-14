@@ -1,5 +1,5 @@
 {
-    "type": "project",
+    "type": "symfony",
     "name": "olecarl/api",
     "description": "RESTful Web-API using Symfony with API-Platform",
     "license": "proprietary",
@@ -71,24 +71,22 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
-        "inspect": [
-            "composer audit",
-            "vendor/bin/phpstan analyse --memory-limit=2G"
+        "validate": [
+            "composer validate --strict",
+            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose"
         ],
         "test": [
-            "vendor/bin/php-cs-fixer fix ./src",
+            "vendor/bin/phpstan analyse",
+            "vendor/bin/codecept run --fail-fast"
+        ],
+        "report": [
             "vendor/bin/codecept run --html",
             "vendor/bin/phpmetrics --git --report-html=./build/phpmetrics/ ."
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "requirements-checker": "script",
-            "composer validate --strict": "script",
-            "composer audit": "script",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd",
-            "php-cs-fixer fix": "script",
-            "vendor/bin/codecept build": "script"
+            "importmap:install": "symfony-cmd"
         },
 
         "post-install-cmd": [
