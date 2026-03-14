@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace App\Tests\Rest;
 
 use App\Tests\Support\RestTester;
-use Codeception\Attribute\DataProvider;
-use Codeception\Example;
 
 final class ApiDocsCest
 {

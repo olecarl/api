@@ -1,5 +1,5 @@
 {
-    "type": "project",
+    "type": "symfony",
     "name": "olecarl/api",
     "description": "RESTful Web-API using Symfony with API-Platform",
     "license": "proprietary",
@@ -71,24 +71,22 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
-        "inspect": [
-            "composer audit",
-            "vendor/bin/phpstan analyse --memory-limit=2G"
+        "validate": [
+            "composer validate --strict",
+            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose"
         ],
         "test": [
-            "vendor/bin/php-cs-fixer fix ./src",
+            "vendor/bin/phpstan analyse",
+            "vendor/bin/codecept run --fail-fast"
+        ],
+        "report": [
             "vendor/bin/codecept run --html",
             "vendor/bin/phpmetrics --git --report-html=./build/phpmetrics/ ."
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "requirements-checker": "script",
-            "composer validate --strict": "script",
-            "composer audit": "script",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd",
-            "php-cs-fixer fix": "script",
-            "vendor/bin/codecept build": "script"
+            "importmap:install": "symfony-cmd"
         },
 
         "post-install-cmd": [
@@ -104,7 +102,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^7.3"
+            "require": "^8.0"
         }
     },
     "require-dev": {
@@ -112,7 +110,7 @@
         "codeception/codeception": "^5.3.5",
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-doctrine": "^3.3",
-        "codeception/module-phpbrowser": "^3.0.2",
+        "codeception/module-phpbrowser": "^4.0",
         "codeception/module-rest": "^3.4.3",
         "codeception/module-symfony": "^3.8",
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
@@ -120,12 +118,12 @@
         "phpmetrics/phpmetrics": "^2.9.1",
         "phpstan/phpstan": "^2.1.40",
         "phpunit/phpunit": "^12.5.14",
-        "symfony/browser-kit": "7.3.*",
-        "symfony/css-selector": "7.3.*",
+        "symfony/browser-kit": "^8.0.4",
+        "symfony/css-selector": "^8.0.6",
         "symfony/maker-bundle": "^1.66.0",
         "symfony/panther": "^2.4",
-        "symfony/stopwatch": "^7.4",
-        "symfony/web-profiler-bundle": "^7.4.7",
+        "symfony/stopwatch": "^v8.0",
+        "symfony/web-profiler-bundle": "^8.0.7",
         "zenstruck/foundry": "^2.9.2"
     }
 }
