@@ -10,15 +10,15 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-pdo_sqlite": "*",
-        "api-platform/doctrine-orm": "^4.3",
-        "api-platform/hal": "^4.3",
-        "api-platform/json-api": "^4.3",
-        "api-platform/symfony": "^4.3",
+        "api-platform/doctrine-orm": "^4.3.1",
+        "api-platform/hal": "^4.3.1",
+        "api-platform/json-api": "^4.3.1",
+        "api-platform/symfony": "^4.3.1",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6.2",
         "nelmio/cors-bundle": "^2.6.1",
-        "phpdocumentor/reflection-docblock": "^6.0.2",
+        "phpdocumentor/reflection-docblock": "^6.0.3",
         "phpstan/phpdoc-parser": "^2.3.2",
         "stof/doctrine-extensions-bundle": "^1.15.3",
         "symfony/asset": "^8.0.6",
@@ -29,6 +29,7 @@
         "symfony/flex": "^2.10",
         "symfony/framework-bundle": "^8.0.7",
         "symfony/monolog-bundle": "^4.0.1",
+        "symfony/object-mapper": "^8.0.6",
         "symfony/property-access": "^8.0.4",
         "symfony/property-info": "^8.0.7",
         "symfony/requirements-checker": "^2.0.3",
@@ -71,12 +72,23 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
-        "validate": [
+        "build": [
+            "@prepare",
+            "@lint",
+            "@test"
+        ],
+        "prepare": [
             "composer validate --strict",
-            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose"
+            "vendor/bin/php-cs-fixer fix"
+        ],
+        "lint": [
+            "bin/console lint:container",
+            "bin/console lint:twig"
         ],
         "test": [
+            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
             "vendor/bin/phpstan analyse",
+            "bin/console doctrine:schema:validate --skip-sync",
             "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
@@ -116,11 +128,11 @@
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
         "friendsofphp/php-cs-fixer": "^3.94.2",
         "phpmetrics/phpmetrics": "^2.9.1",
-        "phpstan/phpstan": "^2.1.40",
+        "phpstan/phpstan": "^2.1.42",
         "phpunit/phpunit": "^12.5.14",
         "symfony/browser-kit": "^8.0.4",
         "symfony/css-selector": "^8.0.6",
-        "symfony/maker-bundle": "^1.66.0",
+        "symfony/maker-bundle": "^1.67.0",
         "symfony/panther": "^2.4",
         "symfony/stopwatch": "^v8.0",
         "symfony/web-profiler-bundle": "^8.0.7",
