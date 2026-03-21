@@ -15,6 +15,7 @@ namespace App\Tests\Rest;
 
 use App\Tests\Support\RestTester;
 
+/** @noinspection PhpUnused */
 final class ApiDocsCest
 {
     public function _before(RestTester $I): void

@@ -6,7 +6,6 @@ api_platform:
     formats:
         jsonld: [ "application/ld+json" ]
         json: [ "application/json" ]
-        html: [ "text/html" ]
     error_formats:
         jsonproblem: [ "application/problem+json" ]
         jsonld: [ "application/ld+json" ] # Hydra error formats
@@ -17,8 +16,16 @@ api_platform:
     enable_entrypoint: false
     enable_docs: true
     enable_profiler: true
+    swagger:
+        versions: [3]
 
     defaults:
         stateless: true
+        # pagination_maximum_items_per_page: 50
+        pagination_client_items_per_page: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+
+    collection:
+        pagination:
+            items_per_page_parameter_name: items

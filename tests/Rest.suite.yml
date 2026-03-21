@@ -8,3 +8,6 @@ modules:
             environment: 'test'
         - REST:
             depends: Symfony
+        - Doctrine:
+            depends: Symfony
+            cleanup: true

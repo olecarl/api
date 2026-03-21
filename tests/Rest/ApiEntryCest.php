@@ -17,6 +17,7 @@ use App\Tests\Support\RestTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 
+/** @noinspection PhpUnused */
 final class ApiEntryCest
 {
     public function _before(RestTester $I): void
@@ -31,6 +32,7 @@ final class ApiEntryCest
         $I->expect('content type is "'.$example['accept'].'"');
         $I->haveHttpHeader('accept', $example['accept']);
         $I->send('GET', '/');
+        $I->expect('response is successful');
         $I->seeResponseCodeIsSuccessful();
     }
 
