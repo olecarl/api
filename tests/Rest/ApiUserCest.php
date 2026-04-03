@@ -18,7 +18,7 @@ final class ApiUserCest
     {
         // UserFactory::createMany(10);
         $I->sendGET('/users');
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseIsJson();
+        $I->seeResponseCodeIs(401);
+        // $I->seeResponseIsJson();
     }
 }

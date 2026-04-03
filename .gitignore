@@ -1,4 +1,6 @@
 .idea/
+.claude/
+CLAUDE.md
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -36,5 +38,3 @@ tests/_output/
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
-
-CLAUDE.md

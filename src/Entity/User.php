@@ -29,12 +29,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(security: "is_granted('ROLE_ADMIN')",validationContext: ['groups' => ['Default', 'user:create']], processor: UserPasswordHasher::class),
         new Get(),
         new Put(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
-        new Patch(processor: UserPasswordHasher::class),
+        new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
         new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
-    security: "is_granted('ROLE_USER')",
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -42,8 +41,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    final public const string ROLE_USER = 'ROLE_USER';
-    final public const string ROLE_ADMIN = 'ROLE_ADMIN';
+    public const string ROLE_USER = 'ROLE_USER';
+    public const string ROLE_ADMIN = 'ROLE_ADMIN';
 
     #[Groups(['user:read'])]
     #[ORM\Id]
