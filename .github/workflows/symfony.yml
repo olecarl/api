@@ -44,4 +44,4 @@ jobs:
     -   name: Execute static code analysis
         run: composer check
     - name: Execute tests (Unit, Functional and Acceptance tests) via Codeception
-      run: composer test
+      run: vendor/bin/codecept run --fail-fast
