@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\User;
+use App\Model\UserRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Tests\Support\UnitTester;
 use Codeception\Test\Unit;
@@ -36,6 +37,8 @@ class UserTest extends Unit
         $passwordHasher = $container->get('security.password_hasher');
         $password = $passwordHasher->hashPassword($user, self::PASSWORD);
         $user->setPassword($password);
+
+        /** @var UserRepository $users */
         $users = $container->get(UserRepository::class);
         $users->save($user);
 
