@@ -20,9 +20,8 @@ settings:
 
 coverage:
     enabled: false
-#    c3_url: 'https://api.ddev.site'
 #    low_limit: 30
-#    high_limit: 60
+#    high_limit: 75
 #    show_only_summary: false
 #    include:
 #        - public/*
