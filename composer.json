@@ -74,6 +74,7 @@
         "build": [
             "@prepare",
             "@lint",
+            "@check",
             "@test"
         ],
         "prepare": [
@@ -84,10 +85,13 @@
             "bin/console lint:container",
             "bin/console lint:twig"
         ],
-        "test": [
-            "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
+        "check": [
+            "vendor/bin/php-cs-fixer check --diff",
             "vendor/bin/phpstan analyse",
-            "bin/console doctrine:schema:validate --skip-sync",
+            "vendor/bin/psalm"
+        ],
+        "test": [
+            "bin/console doctrine:schema:validate",
             "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
@@ -134,6 +138,7 @@
         "symfony/panther": "^2.4",
         "symfony/stopwatch": "^8.0.8",
         "symfony/web-profiler-bundle": "^8.0.8",
+        "vimeo/psalm": "^6.16",
         "zenstruck/foundry": "^2.9.2"
     }
 }
