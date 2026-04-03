@@ -6,7 +6,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-pdo_sqlite": "*",
@@ -27,7 +27,9 @@
         "symfony/dotenv": "^8.0.8",
         "symfony/expression-language": "^8.0.8",
         "symfony/flex": "^2.10",
+        "symfony/form": "^8.0",
         "symfony/framework-bundle": "^8.0.8",
+        "symfony/mailer": "^8.0",
         "symfony/monolog-bundle": "^4.0.2",
         "symfony/object-mapper": "^8.0.8",
         "symfony/property-access": "^8.0.8",
