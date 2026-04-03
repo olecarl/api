@@ -26,6 +26,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@PHP8x5Migration:risky' => true,
         'linebreak_after_opening_tag' => true,
         'mb_str_functions' => true,
         'no_php4_constructor' => true,
