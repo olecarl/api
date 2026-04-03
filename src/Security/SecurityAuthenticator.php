@@ -18,6 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/** @psalm-api */
 final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;

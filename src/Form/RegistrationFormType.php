@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/** @extends AbstractType<User> */
 class RegistrationFormType extends AbstractType
 {
     #[\Override]

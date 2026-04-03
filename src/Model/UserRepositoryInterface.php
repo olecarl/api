@@ -10,5 +10,6 @@ interface UserRepositoryInterface
 {
     public function save(UserInterface $user, bool $flush = false): void;
 
+    /** @psalm-api */
     public function remove(UserInterface $user, bool $flush = false): void;
 }

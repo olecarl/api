@@ -10,6 +10,8 @@ use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
+ * @psalm-api
+ *
  * @implements ProcessorInterface<User, User|void>
  */
 final readonly class UserPasswordHasher implements ProcessorInterface

@@ -12,6 +12,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
+/** @psalm-api */
 class EmailVerifier
 {
     public function __construct(

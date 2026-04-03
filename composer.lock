@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b93459278d92d597821f6bd2ee4f03c1",
+    "content-hash": "40b576d054aca65395ee61708131dfda",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
@@ -13249,6 +13249,72 @@
                 }
             ],
             "time": "2026-03-31T06:41:33+00:00"
+        },
+        {
+            "name": "psalm/plugin-symfony",
+            "version": "v5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/psalm-plugin-symfony.git",
+                "reference": "df874ff48ae3b1833ea17fba7c21b31a4d682614"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-symfony/zipball/df874ff48ae3b1833ea17fba7c21b31a4d682614",
+                "reference": "df874ff48ae3b1833ea17fba7c21b31a4d682614",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "php": ">=8.1",
+                "symfony/expression-language": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/framework-bundle": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "vimeo/psalm": "^6 || dev-master"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.8|^2",
+                "doctrine/orm": "^2.9 || ^3.6",
+                "phpunit/phpunit": "~7.5 || ~9.5",
+                "symfony/cache-contracts": "^1.0 || ^2.0 || ^3.0",
+                "symfony/console": "*",
+                "symfony/form": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/messenger": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/security-core": "*",
+                "symfony/serializer": "^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/validator": "*",
+                "twig/twig": "^2.10 || ^3.0",
+                "weirdan/codeception-psalm-module": "dev-master"
+            },
+            "suggest": {
+                "weirdan/doctrine-psalm-plugin": "If Doctrine is used, it is recommended install this plugin"
+            },
+            "type": "psalm-plugin",
+            "extra": {
+                "psalm": {
+                    "pluginClass": "Psalm\\SymfonyPsalmPlugin\\Plugin"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psalm\\SymfonyPsalmPlugin\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Farhad Safarov",
+                    "email": "farhad.safarov@gmail.com"
+                }
+            ],
+            "description": "Psalm Plugin for Symfony",
+            "support": {
+                "issues": "https://github.com/psalm/psalm-plugin-symfony/issues",
+                "source": "https://github.com/psalm/psalm-plugin-symfony/tree/v5.3.0"
+            },
+            "time": "2026-02-12T11:24:16+00:00"
         },
         {
             "name": "psr/http-client",

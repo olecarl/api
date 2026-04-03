@@ -34,6 +34,7 @@ use function Symfony\Component\String\u;
  * We use the default services.yaml configuration, so command classes are registered as services.
  * See https://symfony.com/doc/current/console/commands_as_services.html
  */
+/** @psalm-api */
 #[AsCommand(
     name: 'app:add-user',
     description: 'Creates users and stores them in the database',

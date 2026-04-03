@@ -81,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = Uuid::v7();
     }
 
+    /** @psalm-api */
     public static function create(string $email, string $password, array $roles = [self::ROLE_USER]): self
     {
         $user = new self();
@@ -167,6 +168,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /** @psalm-api */
     public function isVerified(): bool
     {
         return $this->isVerified;
