@@ -41,7 +41,7 @@ jobs:
       run: |
         mkdir -p data
         touch data/database_test.sqlite
-    -   name: Execute static code analysis
-        run: composer check
+    - name: Execute static code analysis
+      run: composer check
     - name: Execute tests (Unit, Functional and Acceptance tests) via Codeception
       run: vendor/bin/codecept run --fail-fast
