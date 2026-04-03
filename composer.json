@@ -41,6 +41,7 @@
         "symfony/twig-bundle": "^8.0.8",
         "symfony/validator": "^8.0.8",
         "symfony/yaml": "^8.0.8",
+        "symfonycasts/verify-email-bundle": "^1.18",
         "webmozart/assert": "^2.1.6"
     },
     "config": {

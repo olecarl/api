@@ -357,6 +357,9 @@
             "config/routes/web_profiler.yaml"
         ]
     },
+    "symfonycasts/verify-email-bundle": {
+        "version": "v1.18.0"
+    },
     "zenstruck/foundry": {
         "version": "2.9",
         "recipe": {
