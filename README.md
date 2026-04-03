@@ -1,5 +1,7 @@
 # Restful Web API Framework
 
+[![Symfony](https://github.com/olecarl/api/actions/workflows/symfony.yml/badge.svg?branch=master)](https://github.com/olecarl/api/actions/workflows/symfony.yml)
+
 REST API using API-Platform distribution of Symfony PHP Framework.
 Local Development Environment managed by DDEV using DOCKER containers.
 
