@@ -52,18 +52,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[ORM\Column(length: 180)]
-    #[Assert\NotBlank, Assert\Email]
-    private ?string $email = null;
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3)]
+    #[Assert\Email(message: 'The email {{ value }} is not a valid email.')]
+    private string $email = '';
 
     /**
      * @var list<string> The user roles
      */
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     #[Assert\NotBlank, Assert\Type('array')]
     private array $roles = [self::ROLE_USER];
 
     #[ORM\Column]
-    private ?string $password = null;
+    #[Assert\NotBlank(message: 'Please enter a password')]
+    #[Assert\Length(min: 6, minMessage: 'Your password should be at least {{ limit }} characters')]
+    private string $password = '';
 
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
@@ -77,12 +81,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = Uuid::v7();
     }
 
+    public static function create(string $email, string $password, array $roles = [self::ROLE_USER]): self
+    {
+        $user = new self();
+        $user->email = $email;
+        $user->password = $password;
+        $user->roles = $roles;
+
+        return $user;
+    }
+
     public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -160,5 +174,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
     }
 }
