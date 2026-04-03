@@ -30,6 +30,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
     {
     }
 
+    #[Override]
     public function supports(Request $request): bool
     {
         if (self::LOGIN_ROUTE !== $request->attributes->get('_route')) {
@@ -39,6 +40,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         return $request->isMethod('POST');
     }
 
+    #[Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
@@ -48,6 +50,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('app_default'));
     }
 
+    #[Override]
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
