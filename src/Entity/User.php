@@ -87,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user = new self();
         $user->email = $email;
         $user->password = $password;
-        $user->roles = $roles;
+        $user->roles = $roles ?? [];
 
         return $user;
     }
