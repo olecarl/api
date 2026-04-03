@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Rest;
 
-use App\Tests\Factory\UserFactory;
 use App\Tests\Support\RestTester;
 
 final class ApiUserCest

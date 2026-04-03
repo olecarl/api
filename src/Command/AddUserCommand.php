@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Override;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -54,15 +53,14 @@ final class AddUserCommand extends Command
     /**
      * This optional method is the first one executed for a command and is useful
      * to initialize properties based on the input arguments and options.
-     *
      */
-    #[Override]
+    #[\Override]
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    #[Override]
+    #[\Override]
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         /** @var string|null $email */

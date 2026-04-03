@@ -15,11 +15,11 @@ final class ApiLoginCest
     public function tryToLogin(RestTester $I): void
     {
         $I->markTestSkipped();
-        /**
-        * $I->sendPOST('/auth', [
-            * 'email' => 'ole@webconsole.de',
-            * 'password' => 'XS2Test'
-        * ]);
-        * $I->seeResponseCodeIsSuccessful(); **/
+        /*
+         * $I->sendPOST('/auth', [
+         * 'email' => 'ole@webconsole.de',
+         * 'password' => 'XS2Test'
+         * ]);
+         * $I->seeResponseCodeIsSuccessful(); **/
     }
 }

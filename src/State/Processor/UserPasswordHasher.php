@@ -7,7 +7,6 @@ namespace App\State\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
-use Override;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -24,7 +23,7 @@ final readonly class UserPasswordHasher implements ProcessorInterface
     /**
      * @param User $data
      */
-    #[Override]
+    #[\Override]
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
     {
         if (!$data->getPlainPassword()) {

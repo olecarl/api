@@ -14,7 +14,6 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use App\State\Processor\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
-use Override;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -26,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Post(security: "is_granted('ROLE_ADMIN')",validationContext: ['groups' => ['Default', 'user:create']], processor: UserPasswordHasher::class),
+        new Post(security: "is_granted('ROLE_ADMIN')", validationContext: ['groups' => ['Default', 'user:create']], processor: UserPasswordHasher::class),
         new Get(),
         new Put(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
         new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
@@ -109,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Override]
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -118,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[Override]
+    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -143,7 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    #[Override]
+    #[\Override]
     public function getPassword(): string
     {
         return $this->password;

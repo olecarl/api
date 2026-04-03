@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Model\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Override;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -24,7 +23,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    #[Override]
+    #[\Override]
     public function save(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->persist($user);
@@ -34,7 +33,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
-    #[Override]
+    #[\Override]
     public function remove(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->remove($user);
@@ -47,13 +46,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
-    #[Override]
+    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof UserInterface) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
-        /** @var User $user */
+        /* @var User $user */
         $user->setPassword($newHashedPassword);
         $this->save($user, true);
     }

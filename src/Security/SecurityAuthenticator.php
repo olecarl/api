@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use Override;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +29,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
     {
     }
 
-    #[Override]
+    #[\Override]
     public function supports(Request $request): bool
     {
         if (self::LOGIN_ROUTE !== $request->attributes->get('_route')) {
@@ -40,7 +39,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         return $request->isMethod('POST');
     }
 
-    #[Override]
+    #[\Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
@@ -50,13 +49,13 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('app_default'));
     }
 
-    #[Override]
+    #[\Override]
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 
-    #[Override]
+    #[\Override]
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email');
@@ -70,7 +69,7 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    #[Override]
+    #[\Override]
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         return new RedirectResponse(

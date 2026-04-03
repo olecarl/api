@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\User;
-use App\Model\UserRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Tests\Support\UnitTester;
 use Codeception\Test\Unit;
@@ -43,8 +42,8 @@ class UserTest extends Unit
         $users->save($user);
 
         $this->assertNotEmpty($user->getId());
-        $this->assertEquals(self::EMAIL, $user->getEmail());
-        $this->assertNotEquals(self::PASSWORD, $user->getPassword());
+        $this->assertSame(self::EMAIL, $user->getEmail());
+        $this->assertNotSame(self::PASSWORD, $user->getPassword());
         $this->tester->seeInRepository(User::class, ['email' => self::EMAIL]);
     }
 }
