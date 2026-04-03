@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Model\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -23,6 +24,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    #[Override]
     public function save(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->persist($user);
@@ -32,6 +34,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
+    #[Override]
     public function remove(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->remove($user);
@@ -51,8 +54,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         $user->setPassword($newHashedPassword);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
+        $this->save($user, true);
     }
 
     //    /**

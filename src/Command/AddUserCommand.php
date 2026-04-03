@@ -2,25 +2,15 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Command;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Utils\Validator;
+use Override;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -56,7 +46,6 @@ final class AddUserCommand extends Command
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly Validator $validator,
         private readonly UserRepository $users,
     ) {
         parent::__construct();
@@ -65,12 +54,15 @@ final class AddUserCommand extends Command
     /**
      * This optional method is the first one executed for a command and is useful
      * to initialize properties based on the input arguments and options.
+     *
      */
+    #[Override]
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->io = new SymfonyStyle($input, $output);
     }
 
+    #[Override]
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         /** @var string|null $email */
@@ -97,7 +89,7 @@ final class AddUserCommand extends Command
         if (null !== $email) {
             $this->io->text(' > <info>Email</info>: '.$email);
         } else {
-            $email = $this->io->ask('Email', null, $this->validator->validateEmail(...));
+            $email = $this->io->ask('Email', null, null);
             $input->setArgument('email', $email);
         }
 
@@ -105,7 +97,7 @@ final class AddUserCommand extends Command
         if (null !== $password) {
             $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
         } else {
-            $password = $this->io->askHidden('Password (your type will be hidden)', $this->validator->validatePassword(...));
+            $password = $this->io->askHidden('Password (your type will be hidden)', null);
             $input->setArgument('password', $password);
         }
     }
@@ -117,8 +109,6 @@ final class AddUserCommand extends Command
     ): int {
         $stopwatch = new Stopwatch();
         $stopwatch->start('add-user-command');
-
-        $this->validateUserData($email, $plainPassword);
 
         $user = new User();
         $user->setEmail($email);
@@ -138,20 +128,6 @@ final class AddUserCommand extends Command
         }
 
         return Command::SUCCESS;
-    }
-
-    private function validateUserData(string $email, string $plainPassword): void
-    {
-        // validate password and email if is not this input means interactive.
-        $this->validator->validateEmail($email);
-        $this->validator->validatePassword($plainPassword);
-
-        // check if a user with the same email already exists.
-        $existingEmail = $this->users->findOneBy(['email' => $email]);
-
-        if (null !== $existingEmail) {
-            throw new RuntimeException(\sprintf('There is already a user registered with the "%s" email.', $email));
-        }
     }
 
     /**

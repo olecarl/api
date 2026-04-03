@@ -22,10 +22,7 @@ class UserTest extends Unit
 
     public function testValidUser(): void
     {
-        $user = new User()
-            ->setEmail(self::EMAIL)
-            ->setPassword(self::PASSWORD);
-
+        $user = User::create(self::EMAIL, self::PASSWORD);
         $this->assertSame(User::ROLE_USER, $user->getRoles()[0]);
         $this->assertFalse($user->isVerified());
     }
