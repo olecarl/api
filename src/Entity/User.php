@@ -81,13 +81,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = Uuid::v7();
     }
 
-    /** @psalm-api */
+    /**
+     * @psalm-api
+     *
+     * @param list<string> $roles
+     */
     public static function create(string $email, string $password, array $roles = [self::ROLE_USER]): self
     {
         $user = new self();
         $user->email = $email;
         $user->password = $password;
-        $user->roles = $roles ?? [];
+        $user->roles = $roles;
 
         return $user;
     }
