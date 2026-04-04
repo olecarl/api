@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use App\State\Processor\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\Timestampable;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -42,6 +44,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const string ROLE_USER = 'ROLE_USER';
     public const string ROLE_ADMIN = 'ROLE_ADMIN';
+
+    use TimestampableEntity;
 
     #[Groups(['user:read'])]
     #[ORM\Id]
