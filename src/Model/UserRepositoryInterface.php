@@ -12,6 +12,4 @@ interface UserRepositoryInterface
 
     /** @psalm-api */
     public function remove(UserInterface $user, bool $flush = false): void;
-
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void;
 }
