@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
         new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
     ],
-    normalizationContext: ['groups' => ['user:read']],
+#    normalizationContext: ['groups' => ['Default', 'user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]

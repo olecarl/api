@@ -17,4 +17,29 @@ final class ApiUserCest
     {
         $I->markTestSkipped();
     }
+
+    public function tryToGetUser(RestTester $I): void
+    {
+        $I->markTestSkipped();
+    }
+
+    public function tryToPostUser(RestTester $I): void
+    {
+        $I->markTestSkipped();
+    }
+
+    public function tryToPutUser(RestTester $I): void
+    {
+        $I->markTestSkipped();
+    }
+
+    public function tryToPatchUser(RestTester $I): void
+    {
+        $I->markTestSkipped();
+    }
+
+    public function tryToDeleteUser(RestTester $I): void
+    {
+        $I->markTestSkipped();
+    }
 }
