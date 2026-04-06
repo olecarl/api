@@ -25,7 +25,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    #[\Override]
     public function save(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->persist($user);
@@ -35,7 +34,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
-    #[\Override]
     public function remove(UserInterface $user, bool $flush = false): void
     {
         $this->getEntityManager()->remove($user);
@@ -48,11 +46,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
-    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface|UserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
         $user->setPassword($newHashedPassword);
         $this->save($user, true);

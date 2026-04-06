@@ -32,8 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
         new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
     ],
-    //    normalizationContext: ['groups' => ['Default', 'user:read']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']],
+    // normalizationContext: ['groups' => ['Default', 'user:read']],
+    // denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -115,7 +115,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -124,7 +123,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -149,7 +147,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    #[\Override]
     public function getPassword(): string
     {
         return $this->password;
