@@ -9,23 +9,22 @@ Local Development Environment managed by DDEV using DOCKER containers.
 
 - Content Negotiation
 - Semantic Versioning
-- Continous Integration
+- Continuous Integration
 - Automated Testing
 - CORS
 - OpenAPI 3.0
 
-## Tools
+## Stack
 
-- PHP 8.4
-- Symfony 7.4
+- PHP 8.5
+- Symfony 8.0
 - API Platform 4.2
-- Doctrine ORM 3.1
-- PHPStan 2.1
+- Doctrine ORM 3.6
+- PHPStan 2.1 + Psalm 6
 - Codeception 5.3
-- PhpMetrics v2.9
+- PHP CS Fixer 3
+- PHP Metrics 2.9
 - PHPUnit 12.5
-- PHP CS Fixer 3.12
-- PHP Metrics 2.11
 - Foundry 2.9
 
 ## Requirements
@@ -41,22 +40,27 @@ Install required PHP dependencies: `composer install`
 
 ## Usage
 
-Create and start the project in docker containers with: `ddev start` 
+Create and start the project in docker containers: `ddev start`
 
 Launch a browser with the current site: `ddev launch`
 
-See project information with: `ddev describe`, `ddev console about` 
+See project information: `ddev describe`, `ddev console about`
 
 Run Doctrine Migrations: `ddev console doctrine:migrations:migrate`
 
 Launch adminer database management tool in browser: `ddev adminer`
 
-## Testing
+## Development
 
-Run Codeception testsuite: `ddev composer run test`
+| Command | Description |
+|---|---|
+| `ddev composer run build` | Full pipeline: format → lint → static analysis → test |
+| `ddev composer run prepare` | Auto-fix code style (PHP CS Fixer) |
+| `ddev composer run lint` | Lint Symfony container and Twig templates |
+| `ddev composer run check` | Static analysis (PHP CS Fixer dry-run, PHPStan, Psalm) |
+| `ddev composer run test` | Validate Doctrine schema + run Codeception test suites |
+| `ddev composer run report` | Generate HTML test report and PHP Metrics report |
 
-## Code Inspection
+## API Documentation
 
-Run Static code analysis: `ddev composer run inspect`
-
-See Composer scripts in `composer.json` for more testing and analysis tools.
+Swagger UI is available at [`/api/docs`](https://api.ddev.site/docs) when running in dev mode.

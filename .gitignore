@@ -32,3 +32,6 @@ tests/_output/
 ###< symfony/asset-mapper ###
 
 /build/*
+
+.claude
+CLAUDE.md
