@@ -22,11 +22,11 @@ final class UserFactory extends PersistentObjectFactory
     protected function defaults(): array
     {
         return [
-            'createdAt' => self::faker()->dateTime(),
             'email' => self::faker()->text(180),
-            'isVerified' => self::faker()->boolean(),
             'password' => self::faker()->text(),
-            'roles' => [],
+            'roles' => ['ROLE_USER'],
+            'isVerified' => false,
+            'createdAt' => self::faker()->dateTime(),
             'updatedAt' => self::faker()->dateTime(),
         ];
     }

@@ -43,7 +43,7 @@ class FunctionalTester extends Actor
         }
         $this->submitSymfonyForm('registration_form', [
             '[email]' => $email,
-            '[password]' => $password,
+            '[plainPassword]' => $password,
             '[agreeTerms]' => true,
         ]);
     }
