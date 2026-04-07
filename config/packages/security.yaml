@@ -24,6 +24,7 @@ security:
             form_login:
                 check_path: app_login
                 login_path: app_login
+            logout: ~
         api:
             stateless: true
             provider: users
