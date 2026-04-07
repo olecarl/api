@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Entity;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Tests\Support\UnitTester;
+use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 
 class UserTest extends Unit
@@ -28,6 +29,9 @@ class UserTest extends Unit
         $this->assertFalse($user->isVerified());
     }
 
+    /**
+     * @throws ModuleException
+     */
     public function testSaveValidUser(): void
     {
         $user = new User();
