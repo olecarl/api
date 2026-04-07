@@ -17,6 +17,13 @@ security:
         dev:
             pattern: ^/_(profiler|wdt)
             security: false
+        app:
+            pattern:
+                - ^/(login|logout|register|profile)
+            provider: users
+            form_login:
+                check_path: app_login
+                login_path: app_login
         api:
             stateless: true
             provider: users
@@ -32,6 +39,6 @@ security:
         - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
         - { path: ^/contexts, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI contexts
         - { path: ^/auth, roles: PUBLIC_ACCESS }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: /login, roles: PUBLIC_ACCESS }
+        - { path: /register, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
