@@ -19,7 +19,7 @@ security:
             security: false
         app:
             pattern:
-                - ^/(login|logout|register|profile)
+                - ^/(login|logout|register|verify-email|profile)
             provider: users
             form_login:
                 check_path: app_login
