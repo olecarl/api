@@ -26,11 +26,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Post(security: "is_granted('ROLE_ADMIN')", validationContext: ['groups' => ['Default', 'user:create']], processor: UserPasswordHasher::class),
         new Get(),
-        new Put(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
-        new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
-        new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
+        new Post(processor: UserPasswordHasher::class),
+//        new Put(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
+//        new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
+//        new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
     ],
     // normalizationContext: ['groups' => ['Default', 'user:read']],
     // denormalizationContext: ['groups' => ['user:create', 'user:update']],
@@ -42,6 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
+
     public const string ROLE_USER = 'ROLE_USER';
     public const string ROLE_ADMIN = 'ROLE_ADMIN';
 
@@ -67,8 +68,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [self::ROLE_USER];
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Please enter a password')]
-    #[Assert\Length(min: 6, minMessage: 'Your password should be at least {{ limit }} characters')]
+    // #[Assert\NotBlank(message: 'Please enter a password')]
+    // #[Assert\Length(min: 6, minMessage: 'Your password should be at least {{ limit }} characters')]
     private string $password = '';
 
     #[Assert\NotBlank(groups: ['user:create'])]
