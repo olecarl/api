@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use App\State\Processor\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,9 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Get(),
         new Post(processor: UserPasswordHasher::class),
-//        new Put(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
-//        new Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user", processor: UserPasswordHasher::class),
-//        new Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user"),
     ],
     // normalizationContext: ['groups' => ['Default', 'user:read']],
     // denormalizationContext: ['groups' => ['user:create', 'user:update']],
