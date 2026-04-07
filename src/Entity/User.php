@@ -22,12 +22,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new GetCollection(),
         new Get(),
-        new Post(processor: UserPasswordHasher::class),
+        new GetCollection(normalizationContext: ['groups' => ['user:read']]),
+        new Post(
+            denormalizationContext: ['groups' => ['user:create']],
+            processor: UserPasswordHasher::class),
     ],
-    // normalizationContext: ['groups' => ['Default', 'user:read']],
-    // denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -57,6 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
+    #[Groups(['user:read'])]
     #[ORM\Column(type: 'json')]
     #[Assert\NotBlank, Assert\Type('array')]
     private array $roles = [self::ROLE_USER];
