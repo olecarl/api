@@ -88,7 +88,7 @@
         ],
         "lint": [
             "bin/console lint:container",
-            "bin/console lint:twig"
+            "bin/console lint:twig templates/"
         ],
         "check": [
             "vendor/bin/php-cs-fixer check --diff",
