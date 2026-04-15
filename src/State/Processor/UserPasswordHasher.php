@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
  * @psalm-api
@@ -30,6 +31,10 @@ final readonly class UserPasswordHasher implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): ?User
     {
+        if (!$data instanceof User) {
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $data::class));
+        }
+
         if (!$data->getPlainPassword()) {
             return $this->processor->process($data, $operation, $uriVariables, $context);
         }
