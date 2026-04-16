@@ -28,21 +28,21 @@ final class RoutesCest
     {
         $I->haveHttpHeader('Accept', $example['accept']);
         $I->am('Visitor');
-        $I->amGoingTo('access default rule');
+        $I->amGoingTo('access default route');
         $I->amOnPage($example['uri']);
         $I->expect('matching response');
         $I->seeResponseCodeIs($example['status']);
-        $I->haveHttpHeader('Content-Type', $example['accept']);
+        $I->assertResponseHasHeader('Content-Type', $example['accept']);
     }
 
     private function routesProvider(): array
     {
         return [
-            ['uri' => '/', 'accept' => 'text/html', 'status' => 200],
-            ['uri' => '/login', 'accept' => 'text/html', 'status' => 200],
-            ['uri' => '/register', 'accept' => 'text/html', 'status' => 200],
-            ['uri' => '/verify-email', 'accept' => 'text/html', 'status' => 200],
-            ['uri' => '/profile', 'accept' => 'text/html', 'status' => 200],
+            ['uri' => '/',              'accept' => 'text/html', 'status' => 200],
+            ['uri' => '/login',         'accept' => 'text/html', 'status' => 200],
+            ['uri' => '/register',      'accept' => 'text/html', 'status' => 200],
+            ['uri' => '/verify-email',  'accept' => 'text/html', 'status' => 200],
+            ['uri' => '/profile',       'accept' => 'text/html', 'status' => 200],
         ];
     }
 }

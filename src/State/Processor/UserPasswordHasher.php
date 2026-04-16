@@ -32,7 +32,7 @@ final readonly class UserPasswordHasher implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): ?User
     {
         if (!$data instanceof User) {
-            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $data::class));
+            throw new UnsupportedUserException("Instances of $data::class are not supported.");
         }
 
         if (!$data->getPlainPassword()) {

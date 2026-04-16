@@ -64,9 +64,9 @@ final class SecurityAuthenticator extends AbstractLoginFormAuthenticator
         $csrfToken = $request->request->get('_csrf_token');
 
         return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($password),
-            [new CsrfTokenBadge('authenticate', $csrfToken), new RememberMeBadge()]
+            new UserBadge((string) $email),
+            new PasswordCredentials((string) $password),
+            [new CsrfTokenBadge('authenticate', (string) $csrfToken), new RememberMeBadge()]
         );
     }
 
