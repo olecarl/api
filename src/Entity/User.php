@@ -79,6 +79,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = Uuid::v7();
     }
 
+    public function __toString(): string
+    {
+        return $this->email;
+    }
+
     /**
      * @psalm-api
      *
