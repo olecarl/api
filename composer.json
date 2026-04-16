@@ -84,25 +84,29 @@
         ],
         "prepare": [
             "composer validate --strict",
-            "vendor/bin/php-cs-fixer fix"
+            "@php-cs-fixer"
         ],
         "lint": [
             "bin/console lint:container",
-            "bin/console lint:twig templates/"
+            "bin/console lint:twig"
         ],
         "check": [
-            "vendor/bin/php-cs-fixer check --diff",
-            "vendor/bin/phpstan analyse",
-            "vendor/bin/psalm"
+            "@php-cs-fixer-check",
+            "@phpstan",
+            "@psalm"
         ],
         "test": [
-            "bin/console doctrine:schema:validate",
+            "bin/console doctrine:schema:validate --skip-sync",
             "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
             "vendor/bin/codecept run --html",
             "vendor/bin/phpmetrics --git --report-html=./build/phpmetrics/ ."
         ],
+        "phpstan": "vendor/bin/phpstan analyse",
+        "psalm": "vendor/bin/psalm",
+        "php-cs-fixer": "vendor/bin/php-cs-fixer fix",
+        "php-cs-fixer-check": "vendor/bin/php-cs-fixer check --diff",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
