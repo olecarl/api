@@ -123,7 +123,7 @@ final class AddUserCommand extends Command
         $event = $stopwatch->stop('add-user-command');
 
         if ($this->io->isVerbose()) {
-            $this->io->comment(\sprintf('New user database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $user->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+            $this->io->comment(\sprintf('New user database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $user->id, $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;

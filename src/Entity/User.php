@@ -43,9 +43,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private Uuid $id;
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    public Uuid $id {
+        get {
+            return $this->id;
+        }
+    }
 
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[ORM\Column(length: 180)]
@@ -97,11 +100,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->roles = $roles;
 
         return $user;
-    }
-
-    public function getId(): Uuid
-    {
-        return $this->id;
     }
 
     public function getEmail(): string

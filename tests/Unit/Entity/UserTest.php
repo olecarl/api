@@ -45,7 +45,7 @@ class UserTest extends Unit
         $users = $container->get(UserRepository::class);
         $users->save($user);
 
-        $this->assertNotEmpty($user->getId());
+        $this->assertNotEmpty($user->id);
         $this->assertSame(self::EMAIL, $user->getEmail());
         $this->assertNotSame(self::PASSWORD, $user->getPassword());
         $this->tester->seeInRepository(User::class, ['email' => self::EMAIL]);
