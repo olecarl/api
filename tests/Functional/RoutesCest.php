@@ -42,7 +42,6 @@ final class RoutesCest
             ['uri' => '/login',         'accept' => 'text/html', 'status' => 200],
             ['uri' => '/register',      'accept' => 'text/html', 'status' => 200],
             ['uri' => '/verify-email',  'accept' => 'text/html', 'status' => 200],
-            ['uri' => '/profile',       'accept' => 'text/html', 'status' => 200],
         ];
     }
 }

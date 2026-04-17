@@ -22,8 +22,8 @@ final class UserFactory extends PersistentObjectFactory
     protected function defaults(): array
     {
         return [
-            'email' => self::faker()->text(180),
-            'password' => self::faker()->text(),
+            'email' => self::faker()->email(),
+            'password' => self::faker()->text(12),
             'roles' => ['ROLE_USER'],
             'isVerified' => false,
             'createdAt' => self::faker()->dateTime(),

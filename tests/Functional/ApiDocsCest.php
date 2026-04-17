@@ -20,8 +20,7 @@ final class ApiDocsCest
         $I->amOnPage('/docs');
         $I->expect('valid html response');
         $I->seeResponseCodeIsSuccessful();
-        $I->haveHttpHeader('Accept', 'text/html');
-        $I->haveHttpHeader('Content-Type', 'text/html');
+        $I->assertResponseHasHeader('Content-Type', 'text/html');
         $I->expectTo('be on route "api_doc"');
         $I->amOnRoute('api_doc');
         $I->expectTo('see "API Platform" in the response');

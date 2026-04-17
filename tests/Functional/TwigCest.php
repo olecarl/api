@@ -19,15 +19,17 @@ final class TwigCest
     {
         $I->amOnPage($example['uri']);
         $I->seeRenderedTemplate($example['template']);
-        !empty($example['layout']) ?? $I->seeRenderedTemplate($example['layout']);
+        if (!empty($example['layout'])) {
+            $I->seeRenderedTemplate($example['layout']);
+        }
     }
 
     private function routesProvider(): array
     {
         return [
             ['uri' => '/', 'template' => 'default/index.html.twig'],
-            ['uri' => '/login', 'template' => 'security/login.html.twig', 'layout' => 'layout.html.twig'],
-            ['uri' => '/register', 'template' => 'registration/register.html.twig'],
+            ['uri' => '/login', 'template' => 'security/login.html.twig', 'layout' => 'base.html.twig'],
+            ['uri' => '/register', 'template' => 'registration/register.html.twig', 'layout' => 'base.html.twig'],
         ];
     }
 }
