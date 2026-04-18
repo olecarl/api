@@ -2,6 +2,12 @@ actor: ApiTester
 #suite_namespace: App\Tests\Api
 modules:
     enabled:
+        - Asserts
+        - Symfony:
+              app_path: 'src'
+              environment: 'test'
         - REST:
-              url: 'http://localhost:8000'
               depends: Symfony
+        - Doctrine:
+              depends: Symfony
+              cleanup: true
