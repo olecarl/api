@@ -3,5 +3,5 @@ actor: ApiTester
 modules:
     enabled:
         - REST:
-              url: 'https://api.ddev.site'
-              depends: PhpBrowser
+              url: '/'
+              depends: Symfony
