@@ -1,7 +1,0 @@
-actor: ApiTester
-suite_namespace: App\Tests\Api
-modules:
-    enabled:
-        - REST:
-              url: 'https://api.ddev.site'
-              depends: PhpBrowser
