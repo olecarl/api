@@ -3,5 +3,5 @@ actor: ApiTester
 modules:
     enabled:
         - REST:
-              url: '%env(resolve:DEFAULT_URI)%'
+              url: 'https://api.ddev.site'
               depends: PhpBrowser
