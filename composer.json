@@ -96,7 +96,7 @@
         "test": [
             "bin/console doctrine:schema:validate",
             "vendor/bin/codecept build",
-            "vendor/bin/codecept run --fail-fast",
+            "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
             "vendor/bin/codecept run --html",
