@@ -1,0 +1,7 @@
+actor: ApiTester
+suite_namespace: App\Tests\Api
+modules:
+    enabled:
+        - REST:
+              url: '%env(resolve:JWT_SECRET_KEY)%'
+              depends: PhpBrowser
