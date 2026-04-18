@@ -102,15 +102,15 @@ final class AddUserCommand extends Command
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $email = $input->getArgument('email');
-        $plainPassword = $input->getArgument('password');
+        $email = (string) $input->getArgument('email');
+        $plainPassword = (string) $input->getArgument('password');
         $isAdmin = $input->getOption('admin');
 
         $stopwatch = new Stopwatch();
         $stopwatch->start('add-user-command');
 
         $user = new User();
-        $user->setEmail($email ?? '');
+        $user->setEmail($email);
         $user->setRoles($isAdmin ? [User::ROLE_ADMIN, User::ROLE_USER] : [User::ROLE_USER]);
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
