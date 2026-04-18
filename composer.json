@@ -86,7 +86,7 @@
         ],
         "lint": [
             "bin/console lint:container",
-            "bin/console lint:twig"
+            "bin/console lint:twig templates"
         ],
         "check": [
             "vendor/bin/php-cs-fixer check --diff",
@@ -95,7 +95,8 @@
         ],
         "test": [
             "bin/console doctrine:schema:validate",
-            "vendor/bin/codecept run --fail-fast"
+            "vendor/bin/codecept build",
+            "vendor/bin/codecept run --fail-fast",
         ],
         "report": [
             "vendor/bin/codecept run --html",
