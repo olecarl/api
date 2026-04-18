@@ -3,5 +3,5 @@ suite_namespace: App\Tests\Api
 modules:
     enabled:
         - REST:
-              url: '%env(resolve:JWT_SECRET_KEY)%'
+              url: '%env(resolve:DEFAULT_URI)%'
               depends: PhpBrowser
