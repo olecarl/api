@@ -45,5 +45,3 @@ jobs:
       run: composer check
     - name: Run Codeception test suite
       run: vendor/bin/codecept run Functional,Api --fail-fast
-    - name: Execute tests (Unit, Functional and Acceptance tests) via Codeception
-      run: vendor/bin/codecept run --fail-fast
