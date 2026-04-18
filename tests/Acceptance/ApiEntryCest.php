@@ -8,14 +8,12 @@ use App\Tests\Support\AcceptanceTester;
 
 final class ApiEntryCest
 {
-    public function _before(AcceptanceTester $I): void
+    public function tryToAccessApiEntry(AcceptanceTester $I): void
     {
-    }
-
-    // All `public` methods will be executed as tests.
-    public function tryToTest(AcceptanceTester $I): void
-    {
+        $I->am('Visitor');
+        $I->wantTo('access API entry');
         $I->amOnPage('/');
+        $I->expectTo('see Response is successful');
         $I->seeResponseCodeIsSuccessful();
     }
 }
