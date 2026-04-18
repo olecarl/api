@@ -1,5 +1,5 @@
 actor: ApiTester
-suite_namespace: App\Tests\Api
+#suite_namespace: App\Tests\Api
 modules:
     enabled:
         - REST:
