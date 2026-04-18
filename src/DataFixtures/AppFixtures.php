@@ -17,10 +17,10 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = User::create('ole@webconsole.de', '');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'XS2Test'));
-        $manager->persist($user);
-
-        $manager->flush();
+//        $user = User::create('ole@webconsole.de', '');
+//        $user->setPassword($this->passwordHasher->hashPassword($user, 'XS2Test'));
+//        $manager->persist($user);
+//
+//        $manager->flush();
     }
 }

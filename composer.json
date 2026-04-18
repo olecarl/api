@@ -43,7 +43,6 @@
         "symfony/validator": "^8.0.8",
         "symfony/yaml": "^8.0.8",
         "symfonycasts/verify-email-bundle": "^1.18",
-        "web-token/jwt-bundle": "^4.1.6",
         "webmozart/assert": "^2.3.0"
     },
     "config": {

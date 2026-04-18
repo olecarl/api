@@ -372,9 +372,6 @@
     "symfonycasts/verify-email-bundle": {
         "version": "v1.18.0"
     },
-    "web-token/jwt-bundle": {
-        "version": "4.1.4"
-    },
     "zenstruck/foundry": {
         "version": "2.9",
         "recipe": {
