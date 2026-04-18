@@ -95,7 +95,6 @@
         ],
         "test": [
             "bin/console doctrine:schema:validate",
-            "vendor/bin/codecept build",
             "vendor/bin/codecept run --fail-fast"
         ],
         "report": [
