@@ -110,7 +110,7 @@ final class AddUserCommand extends Command
         $stopwatch->start('add-user-command');
 
         $user = new User();
-        $user->setEmail($email);
+        $user->setEmail($email ?? '');
         $user->setRoles($isAdmin ? [User::ROLE_ADMIN, User::ROLE_USER] : [User::ROLE_USER]);
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
