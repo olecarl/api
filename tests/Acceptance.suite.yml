@@ -6,8 +6,14 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
-            url: 'https://api.ddev.site'
+        - Asserts
+        - Symfony:
+              app_path: 'src'
+              environment: 'test'
+        - Doctrine:
+              depends: Symfony
+              cleanup: true
+
 # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion
