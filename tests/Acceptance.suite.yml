@@ -6,8 +6,9 @@
 actor: AcceptanceTester
 modules:
     enabled:
+        - Asserts
         - PhpBrowser:
-            url: 'https://localhost'
+            url: '%env(resolve:DEFAULT_URI)%'
 # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion

@@ -1,6 +1,8 @@
 .idea/
+.claude/
+CLAUDE.md
 ###> symfony/framework-bundle ###
-/.env.local
+/.env.test.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -33,5 +35,7 @@ tests/_output/
 
 /build/*
 
-.claude
-CLAUDE.md
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+**.local

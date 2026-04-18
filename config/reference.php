@@ -911,6 +911,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             property?: scalar|Param|null, // Default: null
  *             manager_name?: scalar|Param|null, // Default: null
  *         },
+ *         lexik_jwt?: array{
+ *             class?: scalar|Param|null, // Default: "Lexik\\Bundle\\JWTAuthenticationBundle\\Security\\User\\JWTUser"
+ *         },
  *     }>,
  *     firewalls?: array<string, array{ // Default: []
  *         pattern?: scalar|Param|null,
@@ -968,6 +971,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         remote_user?: array{
  *             provider?: scalar|Param|null,
  *             user?: scalar|Param|null, // Default: "REMOTE_USER"
+ *         },
+ *         jwt?: array{
+ *             provider?: scalar|Param|null, // Default: null
+ *             authenticator?: scalar|Param|null, // Default: "lexik_jwt_authentication.security.jwt_authenticator"
  *         },
  *         login_link?: array{
  *             check_route?: scalar|Param|null, // Route that will validate the login link - e.g. "app_login_link_verify".
@@ -1809,6 +1816,256 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     skip_translation_on_load?: bool|Param, // Default: false
  *     metadata_cache_pool?: scalar|Param|null, // Default: null
  * }
+ * @psalm-type SymfonycastsVerifyEmailConfig = array{
+ *     lifetime?: int|Param, // The length of time in seconds that a signed URI is valid for after it is created. // Default: 3600
+ * }
+ * @psalm-type LexikJwtAuthenticationConfig = array{
+ *     public_key?: scalar|Param|null, // The key used to sign tokens (useless for HMAC). If not set, the key will be automatically computed from the secret key. // Default: null
+ *     additional_public_keys?: list<scalar|Param|null>,
+ *     secret_key?: scalar|Param|null, // The key used to sign tokens. It can be a raw secret (for HMAC), a raw RSA/ECDSA key or the path to a file itself being plaintext or PEM. // Default: null
+ *     pass_phrase?: scalar|Param|null, // The key passphrase (useless for HMAC) // Default: ""
+ *     token_ttl?: scalar|Param|null, // Default: 3600
+ *     allow_no_expiration?: bool|Param, // Allow tokens without "exp" claim (i.e. indefinitely valid, no lifetime) to be considered valid. Caution: usage of this should be rare. // Default: false
+ *     clock_skew?: scalar|Param|null, // Default: 0
+ *     encoder?: array{
+ *         service?: scalar|Param|null, // Default: "lexik_jwt_authentication.encoder.lcobucci"
+ *         signature_algorithm?: scalar|Param|null, // Default: "RS256"
+ *     },
+ *     user_id_claim?: scalar|Param|null, // Default: "username"
+ *     token_extractors?: array{
+ *         authorization_header?: bool|array{
+ *             enabled?: bool|Param, // Default: true
+ *             prefix?: scalar|Param|null, // Default: "Bearer"
+ *             name?: scalar|Param|null, // Default: "Authorization"
+ *         },
+ *         cookie?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             name?: scalar|Param|null, // Default: "BEARER"
+ *         },
+ *         query_parameter?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             name?: scalar|Param|null, // Default: "bearer"
+ *         },
+ *         split_cookie?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             cookies?: list<scalar|Param|null>,
+ *         },
+ *     },
+ *     remove_token_from_body_when_cookies_used?: scalar|Param|null, // Default: true
+ *     set_cookies?: array<string, array{ // Default: []
+ *         lifetime?: scalar|Param|null, // The cookie lifetime. If null, the "token_ttl" option value will be used // Default: null
+ *         samesite?: "none"|"lax"|"strict"|Param, // Default: "lax"
+ *         path?: scalar|Param|null, // Default: "/"
+ *         domain?: scalar|Param|null, // Default: null
+ *         secure?: scalar|Param|null, // Default: true
+ *         httpOnly?: scalar|Param|null, // Default: true
+ *         partitioned?: scalar|Param|null, // Default: false
+ *         split?: list<scalar|Param|null>,
+ *     }>,
+ *     api_platform?: bool|array{ // API Platform compatibility: add check_path in OpenAPI documentation.
+ *         enabled?: bool|Param, // Default: false
+ *         check_path?: scalar|Param|null, // The login check path to add in OpenAPI. // Default: null
+ *         username_path?: scalar|Param|null, // The path to the username in the JSON body. // Default: null
+ *         password_path?: scalar|Param|null, // The path to the password in the JSON body. // Default: null
+ *     },
+ *     access_token_issuance?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         signature?: array{
+ *             algorithm?: scalar|Param|null, // The algorithm use to sign the access tokens.
+ *             key?: scalar|Param|null, // The signature key. It shall be JWK encoded.
+ *         },
+ *         encryption?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             key_encryption_algorithm?: scalar|Param|null, // The key encryption algorithm is used to encrypt the token.
+ *             content_encryption_algorithm?: scalar|Param|null, // The key encryption algorithm is used to encrypt the token.
+ *             key?: scalar|Param|null, // The encryption key. It shall be JWK encoded.
+ *         },
+ *     },
+ *     access_token_verification?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         signature?: array{
+ *             header_checkers?: list<scalar|Param|null>,
+ *             claim_checkers?: list<scalar|Param|null>,
+ *             mandatory_claims?: list<scalar|Param|null>,
+ *             allowed_algorithms?: list<scalar|Param|null>,
+ *             keyset?: scalar|Param|null, // The signature keyset. It shall be JWKSet encoded.
+ *         },
+ *         encryption?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             continue_on_decryption_failure?: bool|Param, // If enable, non-encrypted tokens or tokens that failed during decryption or verification processes are accepted. // Default: false
+ *             header_checkers?: list<scalar|Param|null>,
+ *             allowed_key_encryption_algorithms?: list<scalar|Param|null>,
+ *             allowed_content_encryption_algorithms?: list<scalar|Param|null>,
+ *             keyset?: scalar|Param|null, // The encryption keyset. It shall be JWKSet encoded.
+ *         },
+ *     },
+ *     blocklist_token?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         cache?: scalar|Param|null, // Storage to track blocked tokens // Default: "cache.app"
+ *     },
+ * }
+ * @psalm-type JoseConfig = array{
+ *     clock?: scalar|Param|null, // PSR-20 clock // Default: "jose.internal_clock"
+ *     checkers?: array{
+ *         claims?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             claims?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         headers?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             headers?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *     },
+ *     jws?: array{
+ *         builders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             signature_algorithms?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         verifiers?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             signature_algorithms?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         serializers?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             serializers?: list<scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         loaders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             signature_algorithms?: array<string, scalar|Param|null>,
+ *             serializers?: array<string, scalar|Param|null>,
+ *             header_checkers?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *     },
+ *     jwe?: array{
+ *         builders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             encryption_algorithms?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         decrypters?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             encryption_algorithms?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         serializers?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             serializers?: list<scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         loaders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             encryption_algorithms?: array<string, scalar|Param|null>,
+ *             serializers?: array<string, scalar|Param|null>,
+ *             header_checkers?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *     },
+ *     nested_token?: array{
+ *         loaders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             signature_algorithms?: array<string, scalar|Param|null>,
+ *             encryption_algorithms?: array<string, scalar|Param|null>,
+ *             jws_serializers?: array<string, scalar|Param|null>,
+ *             jwe_serializers?: array<string, scalar|Param|null>,
+ *             jws_header_checkers?: array<string, scalar|Param|null>,
+ *             jwe_header_checkers?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *         builders?: array<string, array{ // Default: []
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             signature_algorithms?: array<string, scalar|Param|null>,
+ *             encryption_algorithms?: array<string, scalar|Param|null>,
+ *             jws_serializers?: array<string, scalar|Param|null>,
+ *             jwe_serializers?: array<string, scalar|Param|null>,
+ *             tags?: array<string, mixed>,
+ *         }>,
+ *     },
+ *     key_sets?: array<string, array{ // Default: []
+ *         jwkset?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             value?: scalar|Param|null, // The JWKSet object.
+ *         },
+ *         jku?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             url?: scalar|Param|null, // URL of the key set.
+ *             headers?: array<string, mixed>,
+ *         },
+ *         x5u?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             url?: scalar|Param|null, // URL of the key set.
+ *             headers?: array<string, mixed>,
+ *         },
+ *     }>,
+ *     keys?: array<string, array{ // Default: []
+ *         file?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             path?: scalar|Param|null, // Path of the key file.
+ *             password?: scalar|Param|null, // Password used to decrypt the key (optional). // Default: null
+ *             additional_values?: array<string, mixed>,
+ *         },
+ *         p12?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             path?: scalar|Param|null, // Path of the key file.
+ *             password?: scalar|Param|null, // Password used to decrypt the key (optional). // Default: null
+ *             additional_values?: array<string, mixed>,
+ *         },
+ *         certificate?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             path?: scalar|Param|null, // Path of the certificate file.
+ *             additional_values?: array<string, mixed>,
+ *         },
+ *         values?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             values?: array<string, mixed>,
+ *         },
+ *         secret?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             secret?: scalar|Param|null, // The shared secret.
+ *             additional_values?: array<string, mixed>,
+ *         },
+ *         jwk?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             value?: scalar|Param|null, // The JWK object
+ *         },
+ *         x5c?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             value?: scalar|Param|null, // X509 certificate
+ *             additional_values?: array<string, mixed>,
+ *         },
+ *         jwkset?: array{
+ *             is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *             tags?: array<string, mixed>,
+ *             key_set?: scalar|Param|null, // The key set service.
+ *             index?: mixed, // The index of the key in the key set.
+ *         },
+ *     }>,
+ *     jwk_uris?: array<string, array{ // Default: []
+ *         id?: scalar|Param|null, // The service ID of the Key Set to share.
+ *         path?: scalar|Param|null, // To share the JWKSet, then set a valid path (e.g. "/jwkset.json").
+ *         tags?: array<string, mixed>,
+ *         is_public?: bool|Param, // If true, the service will be public, else private. // Default: true
+ *     }>,
+ *     jku_factory?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         client?: scalar|Param|null, // HTTP Client used to retrieve key sets.
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1822,6 +2079,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     nelmio_cors?: NelmioCorsConfig,
  *     api_platform?: ApiPlatformConfig,
  *     stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *     lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
+ *     jose?: JoseConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1838,6 +2098,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         web_profiler?: WebProfilerConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
+ *         jose?: JoseConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1852,6 +2115,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
+ *         jose?: JoseConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1868,6 +2134,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         web_profiler?: WebProfilerConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
+ *         jose?: JoseConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

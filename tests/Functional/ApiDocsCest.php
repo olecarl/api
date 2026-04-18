@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Tests\Functional;
 
 use App\Tests\Support\FunctionalTester;
@@ -29,6 +20,10 @@ final class ApiDocsCest
         $I->amOnPage('/docs');
         $I->expect('valid html response');
         $I->seeResponseCodeIsSuccessful();
-        $I->haveHttpHeader('Content-Type', 'text/html');
+        $I->assertResponseHasHeader('Content-Type', 'text/html');
+        $I->expectTo('be on route "api_doc"');
+        $I->amOnRoute('api_doc');
+        $I->expectTo('see "API Platform" in the response');
+        $I->see('API Platform');
     }
 }

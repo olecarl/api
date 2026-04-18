@@ -1,5 +1,9 @@
 parameters:
-    level: 10
+    level: max
     paths:
         - src/
-        - config/
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            message: '#Method App\\Entity\\User::getUserIdentifier\(\) should return non-empty-string but returns string.#'
+            path: src\Entity\User.php
