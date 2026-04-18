@@ -13,6 +13,12 @@ final class ApiUserCest
         $I->haveHttpHeader('Accept', 'application/ld+json');
     }
 
+    public function tryToLogin(RestTester $I): void
+    {
+        $I->markTestSkipped();
+        // $I->login('ole@webconsole.de', 'XS2Test');
+    }
+
     public function tryToGetUsers(RestTester $I): void
     {
         $I->markTestSkipped();

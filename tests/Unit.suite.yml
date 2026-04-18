@@ -11,3 +11,4 @@ modules:
             environment: 'test'
         - Doctrine:
             depends: Symfony
+            cleanup: true

@@ -6,14 +6,14 @@ namespace App\Tests\Functional;
 
 use App\Tests\Support\FunctionalTester;
 
-final class ApiDocsCest
+final class DocsCest
 {
     public function _before(FunctionalTester $I): void
     {
         $I->haveHttpHeader('Accept', 'text/html');
     }
 
-    public function tryToAccessApiDocs(FunctionalTester $I): void
+    public function tryToAccessDocs(FunctionalTester $I): void
     {
         $I->am('Visitor');
         $I->amGoingTo('access api docs');
