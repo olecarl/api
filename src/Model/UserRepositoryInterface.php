@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\User;
 
 interface UserRepositoryInterface
 {
-    public function save(UserInterface $user, bool $flush = false): void;
+    public function save(User $user, bool $flush = false): void;
 
     /** @psalm-api */
-    public function remove(UserInterface $user, bool $flush = false): void;
+    public function remove(User $user, bool $flush = false): void;
 }

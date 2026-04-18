@@ -66,11 +66,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [self::ROLE_USER];
 
     #[ORM\Column]
-    // #[Assert\NotBlank(message: 'Please enter a password')]
-    // #[Assert\Length(min: 6, minMessage: 'Your password should be at least {{ limit }} characters')]
+    #[Assert\NotBlank(message: 'Please enter a password', groups: ['user:create'])]
+    #[Assert\Length(min: 6, minMessage: 'Your password should be at least {{ limit }} characters', groups: ['user:create'])]
     private string $password = '';
 
     #[Assert\NotBlank(groups: ['user:create'])]
+    #[Assert\Length(min: 6, groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
     private ?string $plainPassword = null;
 

@@ -6,9 +6,7 @@ namespace App\Command;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -101,11 +99,16 @@ final class AddUserCommand extends Command
         }
     }
 
-    public function __invoke(
-        #[Argument('The email of the new user')] string $email,
-        #[Argument('The plain password of the new user', 'password')] string $plainPassword,
-        #[Option('If set, the user is created as an administrator', 'admin')] bool $isAdmin = false,
-    ): int {
+    #[\Override]
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        /** @var string $email */
+        $email = $input->getArgument('email');
+        /** @var string $plainPassword */
+        $plainPassword = $input->getArgument('password');
+        /** @var bool $isAdmin */
+        $isAdmin = $input->getOption('admin');
+
         $stopwatch = new Stopwatch();
         $stopwatch->start('add-user-command');
 
@@ -127,6 +130,15 @@ final class AddUserCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    #[\Override]
+    protected function configure(): void
+    {
+        $this
+            ->addArgument('email', \Symfony\Component\Console\Input\InputArgument::REQUIRED, 'The email of the new user')
+            ->addArgument('password', \Symfony\Component\Console\Input\InputArgument::REQUIRED, 'The plain password of the new user')
+            ->addOption('admin', null, \Symfony\Component\Console\Input\InputOption::VALUE_NONE, 'If set, the user is created as an administrator');
     }
 
     /**
