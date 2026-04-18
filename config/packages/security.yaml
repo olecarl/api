@@ -1,18 +1,31 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        App\Entity\User: "auto"
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        jwt:
-            lexik_jwt: ~
-        # users_in_memory: { memory: null }
+        users:
+            entity:
+                class: App\Entity\User
+                property: email
+            # mongodb:
+            #    class: App\Document\User
+            #    property: email
+
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/(_(profiler|wdt)|css|images|js|assets|bundles)/
             security: false
         api:
-            provider: jwt
+            stateless: true
+            provider: users
+            json_login:
+                check_path: api_auth
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
