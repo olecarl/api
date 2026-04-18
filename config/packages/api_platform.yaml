@@ -4,8 +4,14 @@ api_platform:
     version: 1.0.0
     show_webby: false
     formats:
-        jsonld: [ "application/ld+json" ]
-        json: [ "application/json" ]
+        jsonld: [ 'application/ld+json' ]
+        jsonhal: [ 'application/hal+json' ]
+        jsonapi: [ 'application/vnd.api+json' ]
+        json: [ 'application/json' ]
+        xml: [ 'application/xml', 'text/xml' ]
+        yaml: [ 'application/x-yaml' ]
+        #csv: [ 'text/csv' ]
+        #html: [ 'text/html' ]
     error_formats:
         jsonproblem: [ "application/problem+json" ]
         jsonld: [ "application/ld+json" ] # Hydra error formats
@@ -13,7 +19,7 @@ api_platform:
     # Swagger UI.
     enable_swagger_ui: true
     enable_swagger: true
-    enable_entrypoint: false
+    enable_entrypoint: true
     enable_docs: true
     enable_profiler: true
     swagger:
