@@ -33,7 +33,16 @@ class RestTester extends \Codeception\Actor
 {
     use _generated\RestTesterActions;
 
-    /*
-     * Define custom actions here
-     */
+    public function login(string $email, string $password): void
+    {
+        $this->haveHttpHeader('Content-Type', 'application/json');
+        $this->sendPOST('/auth', [
+            'email' => $email,
+            'password' => $password,
+        ]);
+        $this->seeResponseCodeIsSuccessful();
+        $token = $this->grabDataFromResponseByJsonPath('$.token')[0];
+        $this->amBearerAuthenticated($token);
+        $this->haveHttpHeader('Accept', 'application/ld+json');
+    }
 }
