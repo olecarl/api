@@ -3,5 +3,4 @@ actor: ApiTester
 modules:
     enabled:
         - REST:
-              url: '/'
               depends: Symfony
