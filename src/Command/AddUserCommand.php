@@ -102,11 +102,8 @@ final class AddUserCommand extends Command
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var string $email */
         $email = $input->getArgument('email');
-        /** @var string $plainPassword */
         $plainPassword = $input->getArgument('password');
-        /** @var bool $isAdmin */
         $isAdmin = $input->getOption('admin');
 
         $stopwatch = new Stopwatch();
