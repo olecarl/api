@@ -43,5 +43,7 @@ jobs:
         touch data/database_test.sqlite
     - name: Execute static code analysis
       run: composer check
+    - name: Build Codeception test suite
+      run: vendor/bin/codecept build
     - name: Run Codeception test suite
-      run: vendor/bin/codecept run Functional,Api --fail-fast
+      run: vendor/bin/codecept run --fail-fast
