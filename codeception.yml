@@ -19,11 +19,9 @@ settings:
     report_useless_tests: true
 
 coverage:
-    enabled: false
-#    low_limit: 30
-#    high_limit: 75
-#    show_only_summary: false
-#    include:
-#        - public/*
-#        - src/*
-#        - config/*
+    enabled: true
+    low_limit: 30
+    high_limit: 75
+    show_only_summary: false
+    include:
+        - src/*

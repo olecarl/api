@@ -13,27 +13,23 @@ declare(strict_types=1);
 
 namespace App\Tests\Support;
 
+use Codeception\Actor;
+
 /**
  * Inherited Methods.
  *
- * @method void wantTo($text)
- * @method void wantToTest($text)
- * @method void execute($callable)
- * @method void expectTo($prediction)
- * @method void expect($prediction)
- * @method void amGoingTo($argumentation)
- * @method void am($role)
- * @method void lookForwardTo($achieveValue)
- * @method void comment($description)
- * @method void pause($vars = [])
- *
- * @SuppressWarnings(PHPMD)
+ * @method void wantTo(string $text)
+ * @method void wantToTest(string $text)
+ * @method void execute(callable $callable)
+ * @method void expectTo(string $prediction)
+ * @method void expect(string $prediction)
+ * @method void amGoingTo(string $argumentation)
+ * @method void am(string $role)
+ * @method void lookForwardTo(string $achieveValue)
+ * @method void comment(string $description)
+ * @method void pause(array $vars = [])
  */
-class UnitTester extends \Codeception\Actor
+final class UnitTester extends Actor
 {
     use _generated\UnitTesterActions;
-
-    /*
-     * Define custom actions here
-     */
 }
