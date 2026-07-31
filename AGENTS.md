@@ -7,11 +7,11 @@ Symfony 8 + API Platform 4 REST API. Local dev via DDEV (Docker).
 All commands run inside DDEV container. Prefix with `ddev` when running locally.
 
 ```bash
-ddev composer run build      # Full pipeline: prepare → lint → check → test
-ddev composer run prepare    # Auto-fix code style (PHP CS Fixer)
-ddev composer run lint       # Lint Symfony container + Twig templates
-ddev composer run check      # Static analysis: PHP CS Fixer dry-run, PHPStan, Psalm
-ddev composer run test       # Validate Doctrine schema + Codeception tests
+ddev composer build      # Full pipeline: prepare → lint → check → test
+ddev composer prepare    # Auto-fix code style (PHP CS Fixer)
+ddev composer lint       # Lint Symfony container + Twig templates
+ddev composer check      # Static analysis: PHP CS Fixer dry-run, PHPStan, Psalm
+ddev composer test       # Validate Doctrine schema + Codeception tests
 ```
 
 Run single test suite:
