@@ -183,7 +183,7 @@ final class CreateUserCommand extends Command
         $roles = [];
 
         foreach ($providedRoles as $role) {
-            if (!preg_match('/^ROLE_[A-Z][A-Z0-9_]*$/', $role)) {
+            if (1 !== preg_match('/^ROLE_[A-Z][A-Z0-9_]*$/', $role)) {
                 throw new InvalidArgumentException(\sprintf('Invalid role "%s".', $role));
             }
 
