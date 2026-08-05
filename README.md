@@ -102,4 +102,21 @@ src/
 
 ## API Documentation
 
-Swagger UI is available at [`/api/docs`](https://api.ddev.site/api/docs) when running in dev mode.
+Swagger UI is available at [`/v1/docs`](https://api.ddev.site/v1/docs) when running in dev mode.
+
+## Authentication
+
+Request a JWT using a user's email address and password:
+
+```bash
+curl -X POST https://api.ddev.site/api/login_check \
+    -H 'Content-Type: application/json' \
+    -d '{"username":"user@example.com","password":"your-password"}'
+```
+
+Use the returned token for versioned API requests:
+
+```bash
+curl https://api.ddev.site/v1/your-resource \
+    -H 'Authorization: Bearer <token>'
+```
