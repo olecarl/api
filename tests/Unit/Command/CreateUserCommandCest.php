@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Command;
+
+use App\Command\CreateUserCommand;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Tests\Support\UnitTester;
+use Codeception\Stub;
+use Codeception\Stub\Expected;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+final class CreateUserCommandCest
+{
+    public function testCommandCreatesUserWithNormalizedEmailRolesAndHashedPassword(UnitTester $I): void
+    {
+        $persistedUser = null;
+        $entityManager = Stub::makeEmpty(EntityManagerInterface::class, [
+            'persist' => Expected::once(static function (User $user) use (&$persistedUser): void {
+                $persistedUser = $user;
+            }),
+            'flush' => Expected::once(),
+            'wrapInTransaction' => Expected::once(static fn (callable $operation): mixed => $operation()),
+        ]);
+
+        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $passwordHasher = Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]);
+        $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
+
+        $tester = $this->createTester($entityManager, $userRepository, $passwordHasher, $validator);
+        $tester->setInputs(['long-enough-password', 'long-enough-password']);
+
+        $status = $tester->execute([
+            '--role' => ['ROLE_ADMIN', 'ROLE_ADMIN'],
+            'email' => '  USER@EXAMPLE.COM  ',
+        ]);
+
+        $I->assertSame(Command::SUCCESS, $status);
+        $I->assertSame('user@example.com', $persistedUser?->getEmail());
+        $I->assertSame(['ROLE_ADMIN', 'ROLE_USER'], $persistedUser?->getRoles());
+        $I->assertSame('hashed-password', $persistedUser?->getPassword());
+        $I->assertStringContainsString('was created', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsNonInteractiveExecution(UnitTester $I): void
+    {
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            Stub::makeEmpty(ValidatorInterface::class),
+        );
+
+        $status = $tester->execute(['email' => 'user@example.com'], ['interactive' => false]);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('must be run interactively', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsExistingEmail(UnitTester $I): void
+    {
+        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(new User())]);
+        $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            $userRepository,
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            $validator,
+        );
+
+        $status = $tester->execute(['email' => 'user@example.com']);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('already exists', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsInvalidRole(UnitTester $I): void
+    {
+        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            $userRepository,
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            $validator,
+        );
+        $tester->setInputs(['long-enough-password', 'long-enough-password']);
+
+        $status = $tester->execute([
+            '--role' => ['ROLE_ADMIN', 'invalid-role'],
+            'email' => 'user@example.com',
+        ]);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('Invalid role "invalid-role"', $tester->getDisplay());
+    }
+
+    public function testCommandReturnsFailureForDuplicateEmailDuringFlush(UnitTester $I): void
+    {
+        $entityManager = Stub::makeEmpty(EntityManagerInterface::class, [
+            'wrapInTransaction' => Expected::once(static function (): never {
+                throw Stub::makeEmpty(UniqueConstraintViolationException::class);
+            }),
+        ]);
+        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
+        $tester = $this->createTester(
+            $entityManager,
+            $userRepository,
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            $validator,
+        );
+        $tester->setInputs(['long-enough-password', 'long-enough-password']);
+
+        $status = $tester->execute(['email' => 'user@example.com']);
+
+        $I->assertSame(Command::FAILURE, $status);
+        $I->assertStringContainsString('already exists', $tester->getDisplay());
+    }
+
+    private function createTester(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        UserPasswordHasherInterface $passwordHasher,
+        ValidatorInterface $validator,
+    ): CommandTester {
+        $command = new CreateUserCommand($entityManager, $userRepository, $passwordHasher, $validator);
+
+        return new CommandTester($command);
+    }
+}

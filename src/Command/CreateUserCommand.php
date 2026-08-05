@@ -21,11 +21,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/** @psalm-api The command is discovered by Symfony's AsCommand attribute. */
 #[AsCommand(
     name: 'app:user:create',
     description: 'Creates a user account.',
 )]
-/** @psalm-api The command is discovered by Symfony's AsCommand attribute. */
 final class CreateUserCommand extends Command
 {
     public function __construct(
@@ -100,11 +100,15 @@ final class CreateUserCommand extends Command
         return self::SUCCESS;
     }
 
+    /** @psalm-suppress TypeDoesNotContainType */
     private function getEmail(InputInterface $input, SymfonyStyle $io): string
     {
-        /** @var string|null $email */
         $email = $input->getArgument('email');
         if (null !== $email) {
+            if (!\is_string($email)) {
+                throw new InvalidArgumentException('The email address must be a string.');
+            }
+
             return $this->validateEmail($email);
         }
 
