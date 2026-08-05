@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -80,6 +81,33 @@ final class CreateUserCommandCest
 
         $I->assertSame(Command::INVALID, $status);
         $I->assertStringContainsString('already exists', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsEmailLongerThanDatabaseLimit(UnitTester $I): void
+    {
+        $validator = Stub::makeEmpty(ValidatorInterface::class, [
+            'validate' => Expected::once(new ConstraintViolationList([
+                new ConstraintViolation(
+                    'This value is too long.',
+                    null,
+                    [],
+                    null,
+                    '',
+                    str_repeat('a', 181).'@example.com',
+                ),
+            ])),
+        ]);
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            $validator,
+        );
+
+        $status = $tester->execute(['email' => str_repeat('a', 181).'@example.com']);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('too long', $tester->getDisplay());
     }
 
     public function testCommandRejectsInvalidRole(UnitTester $I): void

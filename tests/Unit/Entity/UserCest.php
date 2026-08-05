@@ -34,6 +34,14 @@ final class UserCest
         $I->assertSame(['ROLE_ADMIN', 2 => 'ROLE_USER'], $user->getRoles());
     }
 
+    public function testUserNormalizesEmail(UnitTester $I): void
+    {
+        $user = (new User())->setEmail('  USER@EXAMPLE.COM  ');
+
+        $I->assertSame('user@example.com', $user->getEmail());
+        $I->assertSame('user@example.com', $user->getUserIdentifier());
+    }
+
     public function testSerializeReplacesPasswordWithCrc32cHash(UnitTester $I): void
     {
         $user = (new User())

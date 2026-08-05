@@ -6,6 +6,8 @@ namespace App\State;
 
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\Pagination;
+use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\User as UserResource;
 use App\Entity\User;
@@ -18,23 +20,42 @@ use App\Repository\UserRepository;
  */
 final readonly class UserProvider implements ProviderInterface
 {
-    public function __construct(private UserRepository $userRepository)
-    {
+    public function __construct(
+        private UserRepository $userRepository,
+        private Pagination $pagination,
+    ) {
     }
 
     /**
      * @param array<string, mixed> $uriVariables
      * @param array<string, mixed> $context
      *
-     * @return list<UserResource>|UserResource|null
+     * @return iterable<UserResource>|UserResource|null
      */
     #[\Override]
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof GetCollection) {
-            return array_map(
-                $this->toResource(...),
-                $this->userRepository->findAll(),
+            if (!$this->pagination->isEnabled($operation, $context)) {
+                return array_map(
+                    $this->toResource(...),
+                    $this->userRepository->findBy([], ['id' => 'ASC']),
+                );
+            }
+
+            /** @var array{0: int, 1: int, 2: int} $pagination */
+            $pagination = $this->pagination->getPagination($operation, $context);
+            [$page, $offset, $limit] = $pagination;
+            $users = 0 === $limit
+                ? []
+                : $this->userRepository->findBy([], ['id' => 'ASC'], $limit, $offset);
+            $resources = array_map($this->toResource(...), $users);
+
+            return new TraversablePaginator(
+                new \ArrayIterator($resources),
+                $page,
+                $limit,
+                $this->userRepository->count([]),
             );
         }
 

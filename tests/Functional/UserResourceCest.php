@@ -44,9 +44,35 @@ final class UserResourceCest
         $I->seeResponseCodeIs(403);
     }
 
-    private function createUser(FunctionalTester $I, string $email, string $password): User
+    public function testAdministratorCanReadPaginatedUserCollection(FunctionalTester $I): void
     {
-        $user = (new User())->setEmail($email);
+        $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
+        $this->createUser($I, 'first@example.com', 'correct horse battery staple');
+        $this->createUser($I, 'second@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($admin, 'api');
+
+        $I->sendGet('/v1/users?items=1');
+
+        $I->seeResponseCodeIs(200);
+        $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
+
+        $I->assertCount(1, $response['member']);
+        $I->assertSame(3, $response['totalItems']);
+    }
+
+    public function testAnonymousUserCannotReadUserCollection(FunctionalTester $I): void
+    {
+        $I->sendGet('/v1/users');
+
+        $I->seeResponseCodeIs(401);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    private function createUser(FunctionalTester $I, string $email, string $password, array $roles = []): User
+    {
+        $user = (new User())->setEmail($email)->setRoles($roles);
         $user->setPassword($I->grabService(UserPasswordHasherInterface::class)->hashPassword($user, $password));
 
         $entityManager = $I->grabService(EntityManagerInterface::class);

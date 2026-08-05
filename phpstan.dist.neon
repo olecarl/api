@@ -6,6 +6,3 @@ parameters:
     paths:
         - src/
     treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-        # Traits are analyzed when used by entities; unused trait warnings are expected in scaffolds
-        - identifier: trait.unused

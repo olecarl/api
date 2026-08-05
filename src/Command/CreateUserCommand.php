@@ -19,6 +19,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /** @psalm-api The command is discovered by Symfony's AsCommand attribute. */
@@ -165,7 +166,10 @@ final class CreateUserCommand extends Command
             throw new InvalidArgumentException('The email address cannot be empty.');
         }
 
-        $violations = $this->validator->validate($email, new Email());
+        $violations = $this->validator->validate($email, [
+            new Email(),
+            new Length(max: 180),
+        ]);
         if ($violations->count() > 0) {
             throw new InvalidArgumentException((string) $violations->get(0)->getMessage());
         }
