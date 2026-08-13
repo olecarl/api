@@ -54,4 +54,25 @@ final class UserCest
         $I->assertSame(hash('crc32c', 'hashed-password'), $serialized["\0".User::class."\0password"]);
         $I->assertNotSame('hashed-password', $serialized["\0".User::class."\0password"]);
     }
+
+    public function testEmptyRolesStillGrantDefaultUserRole(UnitTester $I): void
+    {
+        $user = (new User())->setRoles([]);
+
+        $I->assertSame(['ROLE_USER'], $user->getRoles());
+    }
+
+    public function testNullPasswordIsHashedAsEmptyStringDuringSerialization(UnitTester $I): void
+    {
+        $serialized = (new User())->__serialize();
+
+        $I->assertSame(hash('crc32c', ''), $serialized["\0".User::class."\0password"]);
+    }
+
+    public function testUserIdentifierRejectsWhitespaceOnlyEmail(UnitTester $I): void
+    {
+        $user = (new User())->setEmail('   ');
+
+        $I->expectThrowable(\LogicException::class, $user->getUserIdentifier(...));
+    }
 }

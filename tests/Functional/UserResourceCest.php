@@ -21,6 +21,7 @@ final class UserResourceCest
         $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
 
         $I->assertSame('user@example.com', $response['email']);
+        $I->assertSame((string) $user->getId(), $response['id']);
         $I->assertSame(['ROLE_USER'], $response['roles']);
         $I->assertArrayNotHasKey('password', $response);
     }
@@ -33,6 +34,17 @@ final class UserResourceCest
         $I->sendGet('/users/'.$otherUser->getId());
 
         $I->seeResponseCodeIs(403);
+    }
+
+    public function testAdministratorCanReadAnotherProfile(FunctionalTester $I): void
+    {
+        $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
+        $otherUser = $this->createUser($I, 'other@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($admin, 'api');
+        $I->sendGet('/users/'.$otherUser->getId());
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['id' => (string) $otherUser->getId(), 'email' => 'other@example.com']);
     }
 
     public function testUserCollectionRequiresAdministratorRole(FunctionalTester $I): void
@@ -70,6 +82,24 @@ final class UserResourceCest
     public function testVersionedUserCollectionPathIsNotAvailable(FunctionalTester $I): void
     {
         $I->sendGet('/v1/users');
+
+        $I->seeResponseCodeIs(404);
+    }
+
+    public function testMissingUserCannotBeRead(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($user, 'api');
+        $I->sendGet('/users/00000000-0000-4000-8000-000000000000');
+
+        $I->seeResponseCodeIs(404);
+    }
+
+    public function testInvalidUserIdentifierCannotBeRead(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($user, 'api');
+        $I->sendGet('/users/not-a-uuid');
 
         $I->seeResponseCodeIs(404);
     }

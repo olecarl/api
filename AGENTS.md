@@ -41,21 +41,20 @@ Uses **Codeception** (not PHPUnit directly). Three suites:
 
 Test database: SQLite at `data/database_test.sqlite`. CI creates this file manually before tests.
 
-Foundry used for fixtures (PHPUnit extension enabled in `phpunit.dist.xml`).
+Foundry is installed and its PHPUnit extension is enabled in `phpunit.dist.xml`,
+but it is not currently used by the existing tests or fixtures.
 
 ## Project Structure
 
 ```
 src/
   ApiResource/   # API Platform resource classes (DTOs, not entities)
-  Controller/    # Symfony controllers
+  Command/       # Symfony console commands
   Entity/        # Doctrine entities (persistence only)
     Trait/       # Reusable entity traits (TimestampableTrait)
+  DataFixtures/  # Fixture classes
   Repository/    # Doctrine repositories
-  Service/       # Business logic services
   State/         # API Platform state providers/processors
-  Security/      # Voters, authenticators
-  DataFixtures/  # Fixture classes (excluded from Psalm)
 ```
 
 ## API Platform 4 Patterns
@@ -73,9 +72,14 @@ Run migrations: `ddev console doctrine:migrations:migrate`
 
 ## CI
 
-GitHub Actions runs on push to `master`/`develop` and PRs to `master`. Pipeline:
-1. `composer check` (static analysis)
-2. `vendor/bin/codecept run --fail-fast`
+GitHub Actions runs on push to `master`/`develop` and PRs to `master`. The
+workflow uses PHP 8.5, installs dependencies with `composer update`, creates the
+SQLite test database, runs `composer check`, builds Codeception, and executes
+`vendor/bin/codecept run --fail-fast`.
+
+The final command includes the Acceptance suite, which targets
+`https://api.ddev.site`. The workflow does not start DDEV, so this CI setup must
+be adjusted before Acceptance tests can run reliably on GitHub-hosted runners.
 
 ## Quirks
 

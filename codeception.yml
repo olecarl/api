@@ -17,6 +17,7 @@ settings:
     shuffle: true
     colors: true
     report_useless_tests: true
+bootstrap: bootstrap.php
 
 coverage:
     enabled: true

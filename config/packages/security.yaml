@@ -14,17 +14,17 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern: ^/api/login_check
+            pattern: ^/login_check
             stateless: true
             login_throttling:
                 max_attempts: 5
                 interval: '1 minute'
             json_login:
-                check_path: /api/login_check
+                check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
-            pattern: '^/(?!api/login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+'
+            pattern: '^/(?!login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+'
             stateless: true
             jwt: ~
         main:
@@ -40,8 +40,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: '^/(?!api/login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+', roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login_check, roles: PUBLIC_ACCESS }
+        - { path: '^/(?!login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+', roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

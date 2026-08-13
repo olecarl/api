@@ -5,7 +5,8 @@ Authentifizierung und eine geschuetzte Benutzerressource.
 
 ## Authentifizierung
 
-- `POST /api/login_check` akzeptiert JSON mit `username` und `password`.
+- `POST /login_check` akzeptiert JSON mit `username` und `password`. Die Route
+  verwendet weder ein `/api`- noch ein `/v1`-Praefix.
 - Bei gueltigen Zugangsdaten wird ein RSA-signiertes JWT mit einer
   Standardlaufzeit von 3600 Sekunden ausgegeben.
 - API-Anfragen sind stateless und erwarten
@@ -32,7 +33,9 @@ Die Doctrine-Entity `App\\Entity\\User` implementiert
 - Gehashte Passwoerter, niemals als API-Feld serialisiert
 - Automatische Passwort-Hash-Upgrades ueber `UserRepository`
 - `createdAt` und `updatedAt` ueber `TimestampableTrait`
-- Validierung von E-Mail, Passwort, Rollen und eindeutiger E-Mail-Adresse
+- Validierung von E-Mail, Rollen und eindeutiger E-Mail-Adresse. Die Entity
+  verlangt ein nichtleeres Passwort; die CLI erzwingt zusaetzlich mindestens
+  12 Zeichen.
 
 ## Benutzer-API
 
@@ -42,7 +45,7 @@ veroeffentlicht keine Passwortdaten.
 | Methode | Pfad | Berechtigung |
 |---|---|---|
 | `GET` | `/users` | `ROLE_ADMIN` |
-| `GET` | `/users/{id}` | Eigener Datensatz oder `ROLE_ADMIN` |
+| `GET` | `/users/{uuid}` | Eigener Datensatz oder `ROLE_ADMIN` |
 
 Die Collection unterstuetzt API-Platform-Paginierung mit dem Parameter
 `items` und maximal 50 Eintraegen pro Seite. Der eigene State Provider mappt
@@ -56,8 +59,9 @@ Der Befehl `app:user:create` legt Benutzer interaktiv an:
 ddev console app:user:create [email] [--role=ROLE_NAME]
 ```
 
-- Interaktive Eingabe von E-Mail, Passwort und Passwortbestaetigung
-- Passwoerter muessen mindestens 12 Zeichen lang sein
+- Die E-Mail kann als Argument uebergeben oder interaktiv eingegeben werden.
+  Passwort und Passwortbestaetigung werden interaktiv und verborgen abgefragt.
+- Im CLI muessen Passwoerter mindestens 12 Zeichen lang sein
 - E-Mail-Adressen werden validiert und normalisiert
 - Rollen koennen mehrfach angegeben werden und muessen dem Format
   `ROLE_[A-Z][A-Z0-9_]*` entsprechen
@@ -89,5 +93,6 @@ ddev console app:user:create [email] [--role=ROLE_NAME]
 - Die API-Dokumentation liegt unter dem geschuetzten `/docs`-Pfad. Ohne JWT
   liefert `/docs` daher `401`; das sollte fuer die gewuenschte
   Dokumentationsstrategie bewusst entschieden werden.
-- Die CI-Konfiguration fuehrt die gesamte Codeception-Suite zweimal aus. Das
-  ist kein funktionaler Fehler dieses Features, verlaengert aber die Pipeline.
+- Die CI-Konfiguration baut zuerst die Codeception-Suite und fuehrt sie danach
+  einmal aus. Die Acceptance-Tests erwarten dabei weiterhin einen erreichbaren
+  `https://api.ddev.site`-Server; der aktuelle Workflow startet DDEV nicht.

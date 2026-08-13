@@ -154,6 +154,83 @@ final class CreateUserCommandCest
         $I->assertStringContainsString('already exists', $tester->getDisplay());
     }
 
+    public function testCommandRetriesAfterShortPassword(UnitTester $I): void
+    {
+        $entityManager = Stub::makeEmpty(EntityManagerInterface::class, [
+            'persist' => Expected::once(),
+            'flush' => Expected::once(),
+            'wrapInTransaction' => Expected::once(static fn (callable $operation): mixed => $operation()),
+        ]);
+        $tester = $this->createTester(
+            $entityManager,
+            Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]),
+            Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]),
+            Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]),
+        );
+        $tester->setInputs(['short', 'long-enough-password', 'long-enough-password']);
+
+        $status = $tester->execute(['email' => 'user@example.com']);
+
+        $I->assertSame(Command::SUCCESS, $status);
+        $I->assertStringContainsString('at least 12 characters', $tester->getDisplay());
+    }
+
+    public function testCommandRetriesAfterMismatchedPasswordConfirmation(UnitTester $I): void
+    {
+        $entityManager = Stub::makeEmpty(EntityManagerInterface::class, [
+            'persist' => Expected::once(),
+            'flush' => Expected::once(),
+            'wrapInTransaction' => Expected::once(static fn (callable $operation): mixed => $operation()),
+        ]);
+        $tester = $this->createTester(
+            $entityManager,
+            Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]),
+            Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]),
+            Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]),
+        );
+        $tester->setInputs(['long-enough-password', 'different-password', 'long-enough-password']);
+
+        $status = $tester->execute(['email' => 'user@example.com']);
+
+        $I->assertSame(Command::SUCCESS, $status);
+        $I->assertStringContainsString('do not match', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsInvalidEmail(UnitTester $I): void
+    {
+        $validator = Stub::makeEmpty(ValidatorInterface::class, [
+            'validate' => Expected::once(new ConstraintViolationList([
+                new ConstraintViolation('Enter a valid email address.', null, [], null, '', 'not-an-email'),
+            ])),
+        ]);
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            $validator,
+        );
+
+        $status = $tester->execute(['email' => 'not-an-email']);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('valid email', $tester->getDisplay());
+    }
+
+    public function testCommandRejectsEmptyEmail(UnitTester $I): void
+    {
+        $tester = $this->createTester(
+            Stub::makeEmpty(EntityManagerInterface::class),
+            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserPasswordHasherInterface::class),
+            Stub::makeEmpty(ValidatorInterface::class),
+        );
+
+        $status = $tester->execute(['email' => '   ']);
+
+        $I->assertSame(Command::INVALID, $status);
+        $I->assertStringContainsString('cannot be empty', $tester->getDisplay());
+    }
+
     private function createTester(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,

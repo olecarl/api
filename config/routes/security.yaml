@@ -1,5 +1,5 @@
 api_login_check:
-    path: /api/login_check
+    path: /login_check
 
 _security_logout:
     resource: security.route_loader.logout
