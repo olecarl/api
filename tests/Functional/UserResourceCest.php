@@ -15,7 +15,7 @@ final class UserResourceCest
     {
         $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
         $I->amLoggedInAs($user, 'api');
-        $I->sendGet('/v1/users/'.$user->getId());
+        $I->sendGet('/users/'.$user->getId());
 
         $I->seeResponseCodeIs(200);
         $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
@@ -30,7 +30,7 @@ final class UserResourceCest
         $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
         $otherUser = $this->createUser($I, 'other@example.com', 'correct horse battery staple');
         $I->amLoggedInAs($user, 'api');
-        $I->sendGet('/v1/users/'.$otherUser->getId());
+        $I->sendGet('/users/'.$otherUser->getId());
 
         $I->seeResponseCodeIs(403);
     }
@@ -39,7 +39,7 @@ final class UserResourceCest
     {
         $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
         $I->amLoggedInAs($user, 'api');
-        $I->sendGet('/v1/users');
+        $I->sendGet('/users');
 
         $I->seeResponseCodeIs(403);
     }
@@ -51,7 +51,7 @@ final class UserResourceCest
         $this->createUser($I, 'second@example.com', 'correct horse battery staple');
         $I->amLoggedInAs($admin, 'api');
 
-        $I->sendGet('/v1/users?items=1');
+        $I->sendGet('/users?items=1');
 
         $I->seeResponseCodeIs(200);
         $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
@@ -62,9 +62,16 @@ final class UserResourceCest
 
     public function testAnonymousUserCannotReadUserCollection(FunctionalTester $I): void
     {
-        $I->sendGet('/v1/users');
+        $I->sendGet('/users');
 
         $I->seeResponseCodeIs(401);
+    }
+
+    public function testVersionedUserCollectionPathIsNotAvailable(FunctionalTester $I): void
+    {
+        $I->sendGet('/v1/users');
+
+        $I->seeResponseCodeIs(404);
     }
 
     /**

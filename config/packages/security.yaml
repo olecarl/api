@@ -24,7 +24,7 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
-            pattern: ^/v1
+            pattern: '^/(?!api/login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+'
             stateless: true
             jwt: ~
         main:
@@ -41,7 +41,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }
+        - { path: '^/(?!api/login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+', roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

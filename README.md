@@ -102,7 +102,8 @@ src/
 
 ## API Documentation
 
-Swagger UI is available at [`/v1/docs`](https://api.ddev.site/v1/docs) when running in dev mode.
+Swagger UI is available at [`/docs`](https://api.ddev.site/docs) when running in dev mode.
+Branch-specific features are documented in [`FEATURES.md`](FEATURES.md).
 
 ## Authentication
 
@@ -114,9 +115,9 @@ curl -X POST https://api.ddev.site/api/login_check \
     -d '{"username":"user@example.com","password":"your-password"}'
 ```
 
-Use the returned token for versioned API requests:
+Use the returned token for API requests:
 
 ```bash
-curl https://api.ddev.site/v1/your-resource \
+curl https://api.ddev.site/your-resource \
     -H 'Authorization: Bearer <token>'
 ```
