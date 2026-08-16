@@ -126,6 +126,7 @@ final class CreateUserCommand extends Command
     {
         $question = new Question('Password: ');
         $question->setHidden(true);
+        $question->setHiddenFallback(false);
         $question->setValidator(static function (mixed $answer): string {
             if (!\is_string($answer) || mb_strlen($answer) < 12) {
                 throw new InvalidArgumentException('The password must be at least 12 characters long.');
