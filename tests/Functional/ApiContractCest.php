@@ -181,6 +181,21 @@ final class ApiContractCest
         $I->assertArrayHasKey('JWT', $response['components']['securitySchemes']);
     }
 
+    public function testOpenApiDocumentsMeWithoutAnIdentifier(FunctionalTester $I): void
+    {
+        $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
+        $I->amLoggedInAs($admin, 'api');
+        $I->sendGet('/docs.jsonopenapi');
+
+        $I->seeResponseCodeIs(200);
+        $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
+        $operation = $response['paths']['/me']['get'];
+
+        $I->assertSame('me', $operation['operationId']);
+        $I->assertSame([], $operation['parameters']);
+        $I->assertArrayHasKey('JWT', $response['components']['securitySchemes']);
+    }
+
     public function testDocsArePubliclyAccessibleAndOldPathIsGone(FunctionalTester $I): void
     {
         $I->sendGet('/docs');
