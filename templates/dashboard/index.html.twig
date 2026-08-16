@@ -8,6 +8,11 @@
 
         <p>Signed in as {{ app.user.userIdentifier }}</p>
 
+        {% if app.user.userProfile.about %}
+        <h2>About</h2>
+        <p>{{ app.user.userProfile.about }}</p>
+        {% endif %}
+
         <h2>Your roles</h2>
         <ul>
             {% for role in app.user.roles %}
