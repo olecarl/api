@@ -2,20 +2,20 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security fixes are currently provided for the supported `1.x` release line.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 1.x     | Yes       |
+| < 1.0   | No        |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please report suspected vulnerabilities privately through the repository's
+[GitHub Security Advisories](https://github.com/olecarl/api/security/advisories/new)
+feature. Do not open a public issue containing security-sensitive details.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+We will assess reports as soon as practical. If a report is accepted, we will
+coordinate a fix and disclosure timeline with the reporter. If it is declined,
+we will explain the reason where possible. Response times depend on the severity
+and complexity of the report.
