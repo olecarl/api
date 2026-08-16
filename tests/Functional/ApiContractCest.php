@@ -181,10 +181,13 @@ final class ApiContractCest
         $I->assertArrayHasKey('JWT', $response['components']['securitySchemes']);
     }
 
-    public function testDocsRequireAuthenticationAndOldPathIsGone(FunctionalTester $I): void
+    public function testDocsArePubliclyAccessibleAndOldPathIsGone(FunctionalTester $I): void
     {
         $I->sendGet('/docs');
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(200);
+
+        $I->sendGet('/docs.jsonopenapi');
+        $I->seeResponseCodeIs(200);
 
         $I->sendGet('/v1/docs');
         $I->seeResponseCodeIs(404);

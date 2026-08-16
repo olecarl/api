@@ -90,9 +90,21 @@ ddev console app:user:create [email] [--role=ROLE_NAME]
 
 ## Review-Hinweise
 
-- Die API-Dokumentation liegt unter dem geschuetzten `/docs`-Pfad. Ohne JWT
-  liefert `/docs` daher `401`; das sollte fuer die gewuenschte
-  Dokumentationsstrategie bewusst entschieden werden.
+- Die API-Dokumentation liegt unter dem oeffentlichen `/docs`-Pfad und ist ohne
+  JWT erreichbar. Das wurde bewusst entschieden, damit die Dokumentation ohne
+  vorherige Anmeldung eingesehen werden kann; die eigentlichen API-Endpunkte
+  bleiben weiterhin geschuetzt.
 - Die CI-Konfiguration baut zuerst die Codeception-Suite und fuehrt sie danach
   einmal aus. Die Acceptance-Tests erwarten dabei weiterhin einen erreichbaren
   `https://api.ddev.site`-Server; der aktuelle Workflow startet DDEV nicht.
+
+## Browser Dashboard
+
+- Add a `DashboardController` with a protected `GET /dashboard` route.
+- Allow any authenticated user with `ROLE_USER` or `ROLE_ADMIN` to access the dashboard.
+- Use session-based browser authentication for the dashboard without changing JWT authentication for API Platform routes.
+- Redirect unauthenticated dashboard visitors to `/login` and return them to their originally requested page after login.
+- Provide a Twig login page at `/login` with CSRF protection and a generic error for invalid credentials.
+- Display the authenticated user's email address and roles on the dashboard.
+- Provide a CSRF-protected logout action that returns the user to `/login`.
+- Include a link to the API documentation from the dashboard.

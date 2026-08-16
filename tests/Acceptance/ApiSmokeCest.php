@@ -23,10 +23,10 @@ final class ApiSmokeCest
         $I->seeResponseCodeIsBetween(400, 401);
     }
 
-    public function testVersionlessDocumentationRouteIsProtected(AcceptanceTester $I): void
+    public function testVersionlessDocumentationRouteIsPubliclyAccessible(AcceptanceTester $I): void
     {
         $I->amOnPage('/docs');
 
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(200);
     }
 }
