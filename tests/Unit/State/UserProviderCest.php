@@ -15,6 +15,7 @@ use App\State\UserProvider;
 use App\Tests\Support\UnitTester;
 use Codeception\Stub;
 use Codeception\Stub\Expected;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
 
 final class UserProviderCest
@@ -25,7 +26,7 @@ final class UserProviderCest
         $repository = Stub::makeEmpty(UserRepository::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = new UserProvider($repository, new Pagination());
+        $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $resource = $provider->provide(new Get(), ['id' => $user->getId()]);
 
@@ -40,9 +41,32 @@ final class UserProviderCest
         $repository = Stub::makeEmpty(UserRepository::class, [
             'findOneBy' => Expected::once(null),
         ]);
-        $provider = new UserProvider($repository, new Pagination());
+        $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $I->assertNull($provider->provide(new Get(), ['id' => Uuid::v4()]));
+    }
+
+    public function testProvidesAuthenticatedUserForMeOperation(UnitTester $I): void
+    {
+        $user = $this->createUser('user@example.com');
+        $repository = Stub::makeEmpty(UserRepository::class);
+        $security = Stub::makeEmpty(Security::class, ['getUser' => Expected::once($user)]);
+        $provider = new UserProvider($repository, new Pagination(), $security);
+
+        $resource = $provider->provide(new Get(uriTemplate: '/me', name: 'me'));
+
+        $I->assertInstanceOf(UserResource::class, $resource);
+        $I->assertSame($user->getId(), $resource->getId());
+        $I->assertSame('user@example.com', $resource->getEmail());
+    }
+
+    public function testReturnsNullForMeWithoutAuthenticatedUser(UnitTester $I): void
+    {
+        $repository = Stub::makeEmpty(UserRepository::class);
+        $security = Stub::makeEmpty(Security::class, ['getUser' => Expected::once(null)]);
+        $provider = new UserProvider($repository, new Pagination(), $security);
+
+        $I->assertNull($provider->provide(new Get(uriTemplate: '/me', name: 'me')));
     }
 
     public function testProvidesSortedUnpaginatedCollection(UnitTester $I): void
@@ -53,7 +77,7 @@ final class UserProviderCest
             'findBy' => Expected::once([$first, $second]),
         ]);
         $pagination = new Pagination(['enabled' => false]);
-        $provider = new UserProvider($repository, $pagination);
+        $provider = new UserProvider($repository, $pagination, Stub::makeEmpty(Security::class));
 
         $resources = $provider->provide(new GetCollection());
 
@@ -73,7 +97,7 @@ final class UserProviderCest
             'client_items_per_page' => true,
             'items_per_page_parameter_name' => 'items',
         ]);
-        $provider = new UserProvider($repository, $pagination);
+        $provider = new UserProvider($repository, $pagination, Stub::makeEmpty(Security::class));
 
         $result = $provider->provide(new GetCollection(), [], ['filters' => ['items' => 1]]);
 
@@ -90,7 +114,7 @@ final class UserProviderCest
         $repository = Stub::makeEmpty(UserRepository::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = new UserProvider($repository, new Pagination());
+        $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $resource = $provider->provide(new Get(), ['id' => $user->getId()]);
 
@@ -101,7 +125,7 @@ final class UserProviderCest
     {
         $user = (new User())->setEmail('user@example.com')->setPassword('hashed-password');
         $repository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once($user)]);
-        $provider = new UserProvider($repository, new Pagination());
+        $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider): void {
             $provider->provide(new Get(), ['id' => Uuid::v4()]);
@@ -114,7 +138,7 @@ final class UserProviderCest
         $email = (new \ReflectionClass($user))->getProperty('email');
         $email->setValue($user, null);
         $repository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once($user)]);
-        $provider = new UserProvider($repository, new Pagination());
+        $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider, $user): void {
             $provider->provide(new Get(), ['id' => $user->getId()]);
@@ -130,7 +154,7 @@ final class UserProviderCest
             'client_items_per_page' => true,
             'items_per_page_parameter_name' => 'items',
         ]);
-        $provider = new UserProvider($repository, $pagination);
+        $provider = new UserProvider($repository, $pagination, Stub::makeEmpty(Security::class));
 
         $result = $provider->provide(new GetCollection(), [], ['filters' => ['items' => 0]]);
 
