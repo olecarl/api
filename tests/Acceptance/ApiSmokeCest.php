@@ -18,7 +18,7 @@ final class ApiSmokeCest
     public function testLoginEndpointRemainsAvailable(AcceptanceTester $I): void
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->amOnPage('/login_check');
+        $I->sendAjaxPostRequest('/login_check', []);
 
         $I->seeResponseCodeIsBetween(400, 401);
     }

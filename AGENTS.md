@@ -25,7 +25,7 @@ ddev composer report     # Codeception HTML report + PhpMetrics report in build/
 
 JWT-based (LexikJWTAuthenticationBundle). No session cookies.
 
-- Login: `POST /login_check` with JSON `{"email": ..., "password": ...}` → returns JWT token
+- Login: `POST /login_check` with JSON `{"username": ..., "password": ...}` (where `username` expects the user's email address) → returns JWT token
 - All API routes require `Authorization: Bearer <token>` (enforced via `access_control`)
 - `login_check` is rate-limited to 5 attempts per minute (see `security.yaml`)
 - Roles: `ROLE_ADMIN` and `ROLE_USER`; `User` resource operations are gated with
@@ -67,14 +67,20 @@ but it is not currently used by the existing tests or fixtures.
 ## Project Structure
 
 ```
-src/
-  ApiResource/   # API Platform resource classes (DTOs, not entities)
-  Command/       # Symfony console commands
-  Entity/        # Doctrine entities (persistence only)
-    Trait/       # Reusable entity traits (TimestampableTrait)
-  DataFixtures/  # Fixture classes
-  Repository/    # Doctrine repositories
-  State/         # API Platform state providers/processors
+.ddev/         # Local dev environment configuration (DDEV/Docker)
+.github/       # GitHub Actions CI workflow definitions
+config/        # Symfony configuration (routing, security, services)
+data/          # SQLite databases (used for testing)
+migrations/    # Doctrine database migration scripts
+src/           # Application source code
+  ApiResource/ # API Platform DTOs (exposed public API resources, not entities)
+  Command/     # Symfony console CLI commands (e.g. app:user:create)
+  DataFixtures/# Database fixtures for local seed data
+  Entity/      # Doctrine entities (database mapping and schema)
+    Trait/     # Reusable entity traits (e.g. TimestampableTrait)
+  Repository/  # Doctrine repositories for database querying
+  State/       # API Platform custom State Providers & Processors
+tests/         # Codeception test suites (Unit, Functional, Acceptance)
 ```
 
 ## API Platform 4 Patterns
