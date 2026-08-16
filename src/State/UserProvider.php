@@ -75,7 +75,7 @@ final readonly class UserProvider implements ProviderInterface
         return null === $user ? null : $this->toResource($user);
     }
 
-    private function toResource(User $user): UserResource
+    public function toResource(User $user): UserResource
     {
         $id = $user->getId();
         if (null === $id) {
