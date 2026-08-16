@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Command;
 
 use App\Command\CreateUserCommand;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\UserRepositoryInterface;
 use App\Tests\Support\UnitTester;
 use Codeception\Stub;
 use Codeception\Stub\Expected;
@@ -32,7 +32,7 @@ final class CreateUserCommandCest
             'wrapInTransaction' => Expected::once(static fn (callable $operation): mixed => $operation()),
         ]);
 
-        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $userRepository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(null)]);
         $passwordHasher = Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]);
         $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
 
@@ -55,7 +55,7 @@ final class CreateUserCommandCest
     {
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
-            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserRepositoryInterface::class),
             Stub::makeEmpty(UserPasswordHasherInterface::class),
             Stub::makeEmpty(ValidatorInterface::class),
         );
@@ -68,7 +68,7 @@ final class CreateUserCommandCest
 
     public function testCommandRejectsExistingEmail(UnitTester $I): void
     {
-        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(new User())]);
+        $userRepository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(new User())]);
         $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
@@ -99,7 +99,7 @@ final class CreateUserCommandCest
         ]);
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
-            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserRepositoryInterface::class),
             Stub::makeEmpty(UserPasswordHasherInterface::class),
             $validator,
         );
@@ -112,7 +112,7 @@ final class CreateUserCommandCest
 
     public function testCommandRejectsInvalidRole(UnitTester $I): void
     {
-        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $userRepository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(null)]);
         $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
@@ -138,7 +138,7 @@ final class CreateUserCommandCest
                 throw Stub::makeEmpty(UniqueConstraintViolationException::class);
             }),
         ]);
-        $userRepository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]);
+        $userRepository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(null)]);
         $validator = Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]);
         $tester = $this->createTester(
             $entityManager,
@@ -163,7 +163,7 @@ final class CreateUserCommandCest
         ]);
         $tester = $this->createTester(
             $entityManager,
-            Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]),
+            Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(null)]),
             Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]),
             Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]),
         );
@@ -184,7 +184,7 @@ final class CreateUserCommandCest
         ]);
         $tester = $this->createTester(
             $entityManager,
-            Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once(null)]),
+            Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once(null)]),
             Stub::makeEmpty(UserPasswordHasherInterface::class, ['hashPassword' => Expected::once('hashed-password')]),
             Stub::makeEmpty(ValidatorInterface::class, ['validate' => Expected::once(new ConstraintViolationList())]),
         );
@@ -205,7 +205,7 @@ final class CreateUserCommandCest
         ]);
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
-            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserRepositoryInterface::class),
             Stub::makeEmpty(UserPasswordHasherInterface::class),
             $validator,
         );
@@ -220,7 +220,7 @@ final class CreateUserCommandCest
     {
         $tester = $this->createTester(
             Stub::makeEmpty(EntityManagerInterface::class),
-            Stub::makeEmpty(UserRepository::class),
+            Stub::makeEmpty(UserRepositoryInterface::class),
             Stub::makeEmpty(UserPasswordHasherInterface::class),
             Stub::makeEmpty(ValidatorInterface::class),
         );
@@ -233,7 +233,7 @@ final class CreateUserCommandCest
 
     private function createTester(
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository,
+        UserRepositoryInterface $userRepository,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
     ): CommandTester {
