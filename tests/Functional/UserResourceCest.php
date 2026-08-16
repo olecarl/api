@@ -7,6 +7,7 @@ namespace App\Tests\Functional;
 use App\Entity\User;
 use App\Tests\Support\FunctionalTester;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserResourceCest
@@ -24,6 +25,97 @@ final class UserResourceCest
         $I->assertSame((string) $user->getId(), $response['id']);
         $I->assertSame(['ROLE_USER'], $response['roles']);
         $I->assertArrayNotHasKey('password', $response);
+    }
+
+    public function testAuthenticatedUserCanReadOwnProfileAtMe(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($user, 'api');
+        $I->sendGet('/me');
+
+        $I->seeResponseCodeIs(200);
+        $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
+
+        $I->assertSame('user@example.com', $response['email']);
+        $I->assertSame((string) $user->getId(), $response['id']);
+        $I->assertSame(['ROLE_USER'], $response['roles']);
+        $I->assertArrayNotHasKey('password', $response);
+    }
+
+    public function testMeReturnsTheAuthenticatedUsersOwnProfile(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $otherUser = $this->createUser($I, 'other@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($otherUser, 'api');
+        $I->sendGet('/me');
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['id' => (string) $otherUser->getId(), 'email' => 'other@example.com']);
+        $I->dontSeeResponseContainsJson(['id' => (string) $user->getId(), 'email' => 'user@example.com']);
+    }
+
+    public function testAdministratorCanReadOwnProfileAtMe(FunctionalTester $I): void
+    {
+        $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
+        $I->amLoggedInAs($admin, 'api');
+        $I->sendGet('/me');
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['id' => (string) $admin->getId(), 'email' => 'admin@example.com']);
+    }
+
+    public function testAnonymousUserCannotReadMe(FunctionalTester $I): void
+    {
+        $I->sendGet('/me');
+
+        $I->seeResponseCodeIs(401);
+    }
+
+    public function testMeDoesNotAcceptAUserIdentifierInThePath(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($user, 'api');
+        $I->sendGet('/me/'.$user->getId());
+
+        $I->seeResponseCodeIs(404);
+    }
+
+    public function testMeIgnoresUserIdentifierQueryParameters(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $otherUser = $this->createUser($I, 'other@example.com', 'correct horse battery staple');
+        $I->amLoggedInAs($user, 'api');
+        $I->sendGet('/me?userId='.$otherUser->getId());
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseContainsJson(['id' => (string) $user->getId(), 'email' => 'user@example.com']);
+        $I->dontSeeResponseContainsJson(['id' => (string) $otherUser->getId(), 'email' => 'other@example.com']);
+    }
+
+    public function testMeUsesCanonicalUserIri(FunctionalTester $I): void
+    {
+        $user = $this->createUser($I, 'user@example.com', 'correct horse battery staple');
+        $token = $I->grabService(JWTTokenManagerInterface::class)->create($user);
+
+        foreach ([
+            'application/ld+json',
+            'application/hal+json',
+            'application/vnd.api+json',
+        ] as $format) {
+            $I->haveHttpHeader('Authorization', 'Bearer '.$token);
+            $I->haveHttpHeader('Accept', $format);
+            $I->sendGet('/me');
+
+            $I->seeResponseCodeIs(200);
+            $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
+            $self = match ($format) {
+                'application/ld+json' => $response['@id'],
+                'application/hal+json' => $response['_links']['self']['href'],
+                'application/vnd.api+json' => $response['data']['id'],
+            };
+
+            $I->assertStringEndsWith('/users/'.$user->getId(), $self);
+        }
     }
 
     public function testAuthenticatedUserCannotReadAnotherProfile(FunctionalTester $I): void

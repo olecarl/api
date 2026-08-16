@@ -63,6 +63,9 @@ ddev launch
 # Run database migrations
 ddev console doctrine:migrations:migrate
 
+# Create a user or administrator account (Interactive prompt, password must be >= 12 chars)
+ddev console app:user:create
+
 # Open database admin (Adminer)
 ddev adminer
 
@@ -92,26 +95,38 @@ ddev exec vendor/bin/codecept run Acceptance
 
 ## Project Structure
 
+The project follows a standard Symfony structure combined with API Platform 4 patterns (DTO-first design):
+
 ```
-src/
-  ApiResource/   # API Platform resource classes (DTOs)
-  Command/       # Symfony console commands
-  Entity/        # Doctrine entities
-    Trait/       # Reusable entity traits
-  DataFixtures/  # Database fixtures
-  Repository/    # Doctrine repositories
-  State/         # API Platform state providers/processors
+.ddev/         # Local dev environment configuration (DDEV/Docker)
+.github/       # GitHub Actions CI workflow definitions
+config/        # Symfony configuration (routing, security, services)
+data/          # SQLite databases (used for testing)
+migrations/    # Doctrine database migration scripts
+src/           # Application source code
+  ApiResource/ # API Platform DTOs (exposed public API resources)
+  Command/     # Symfony console CLI commands (e.g. app:user:create)
+  DataFixtures/# Database fixtures for local seed data
+  Entity/      # Doctrine entities (database mapping and schema)
+    Trait/     # Reusable entity traits (e.g. TimestampableTrait)
+  Repository/  # Doctrine repositories for database querying
+  State/       # API Platform custom State Providers & Processors
+tests/         # Codeception test suites (Unit, Functional, Acceptance)
 ```
 
 ## API Documentation
 
 Swagger UI is available at [`/docs`](https://api.ddev.site/docs) in dev and test
-environments. The documentation routes require authentication; they are disabled
-in production. Branch-specific features are documented in [`FEATURES.md`](FEATURES.md).
+environments. Note that access to `/docs` itself is secured and requires
+authentication; you can authorize using your JWT token in the Swagger UI.
+The documentation routes are disabled in production. Branch-specific features are
+documented in [`FEATURES.md`](FEATURES.md).
 
 ## Authentication
 
-Request a JWT using a user's email address and password:
+Request a JWT using a user's email address and password. Note that Symfony's
+security configuration expects the email address in the `username` field of the
+JSON payload:
 
 ```bash
 curl -X POST https://api.ddev.site/login_check \
