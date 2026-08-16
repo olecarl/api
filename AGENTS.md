@@ -99,12 +99,11 @@ Run migrations: `ddev console doctrine:migrations:migrate`
 
 GitHub Actions runs on push to `master`/`develop` and PRs to `master`. The
 workflow uses PHP 8.5, installs dependencies with `composer update`, creates the
-SQLite test database, runs `composer check`, builds Codeception, and executes
-`vendor/bin/codecept run --fail-fast`.
+SQLite test database, runs `composer check`, and executes
+`vendor/bin/codecept run --fail-fast Unit Functional`.
 
-The final command includes the Acceptance suite, which targets
-`https://api.ddev.site`. The workflow does not start DDEV, so this CI setup must
-be adjusted before Acceptance tests can run reliably on GitHub-hosted runners.
+The Acceptance suite targets `https://api.ddev.site` and requires DDEV to be
+running. It is excluded from CI and must be run locally with DDEV.
 
 ## Quirks
 
