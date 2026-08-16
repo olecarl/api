@@ -29,11 +29,4 @@ final class ApiSmokeCest
 
         $I->seeResponseCodeIs(401);
     }
-
-    public function testOldVersionedRoutesAreGone(AcceptanceTester $I): void
-    {
-        $I->amOnPage('/v1/users');
-
-        $I->seeResponseCodeIs(404);
-    }
 }

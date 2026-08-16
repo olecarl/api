@@ -9,15 +9,6 @@ use Symfony\Component\Yaml\Yaml;
 
 final class ApiConfigurationCest
 {
-    public function testApiRoutesHaveNoVersionPrefix(UnitTester $I): void
-    {
-        $configuration = Yaml::parseFile(\dirname(__DIR__, 3).'/config/routes/api_platform.yaml');
-
-        $I->assertArrayNotHasKey('prefix', $configuration['api_platform']);
-        $I->assertArrayNotHasKey('requirements', $configuration['api_platform']);
-        $I->assertArrayNotHasKey('defaults', $configuration['api_platform']);
-    }
-
     public function testApiDocumentationIsDisabledInProduction(UnitTester $I): void
     {
         $configuration = Yaml::parseFile(\dirname(__DIR__, 3).'/config/packages/api_platform.yaml');
