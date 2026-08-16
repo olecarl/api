@@ -24,12 +24,23 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
-            pattern: '^/(?!login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+'
+            pattern: '^/(?!login_check(?:/|$)|login(?:/|$)|dashboard(?:/|$)|logout(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+'
             stateless: true
             jwt: ~
         main:
             lazy: true
             provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                csrf_token_id: authenticate
+                failure_forward: true
+                default_target_path: dashboard
+            logout:
+                path: app_logout
+                target: app_login
+                enable_csrf: true
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -41,6 +52,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/docs, roles: PUBLIC_ACCESS }
         - { path: '^/(?!login_check(?:/|$)|_(?:profiler|wdt|error)(?:/|$)|(?:css|images|js)(?:/|$)).+', roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

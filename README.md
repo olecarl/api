@@ -117,10 +117,10 @@ tests/         # Codeception test suites (Unit, Functional, Acceptance)
 ## API Documentation
 
 Swagger UI is available at [`/docs`](https://api.ddev.site/docs) in dev and test
-environments. Note that access to `/docs` itself is secured and requires
-authentication; you can authorize using your JWT token in the Swagger UI.
-The documentation routes are disabled in production. Branch-specific features are
-documented in [`FEATURES.md`](FEATURES.md).
+environments. The documentation is publicly accessible and does not require
+credentials; you can authorize protected endpoints using your JWT token in the
+Swagger UI. The documentation routes are disabled in production. Branch-specific
+features are documented in [`FEATURES.md`](FEATURES.md).
 
 ## Authentication
 
