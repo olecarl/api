@@ -12,6 +12,7 @@ use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\User as UserResource;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @implements ProviderInterface<UserResource>
@@ -23,6 +24,7 @@ final readonly class UserProvider implements ProviderInterface
     public function __construct(
         private UserRepository $userRepository,
         private Pagination $pagination,
+        private Security $security,
     ) {
     }
 
@@ -57,6 +59,12 @@ final readonly class UserProvider implements ProviderInterface
                 $limit,
                 $this->userRepository->count([]),
             );
+        }
+
+        if ('me' === $operation->getName()) {
+            $user = $this->security->getUser();
+
+            return $user instanceof User ? $this->toResource($user) : null;
         }
 
         $user = $this->userRepository->findOneBy(['id' => $uriVariables['id'] ?? null]);

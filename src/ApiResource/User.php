@@ -24,6 +24,13 @@ use Symfony\Component\Uid\Uuid;
             security: "is_granted('ROLE_ADMIN') or object.getEmail() == user.getUserIdentifier()",
             securityMessage: 'You can only view your own user profile.',
         ),
+        new Get(
+            uriTemplate: '/me{._format}',
+            uriVariables: [],
+            security: "is_granted('ROLE_USER')",
+            securityMessage: 'Only authenticated users can view their own profile.',
+            name: 'me',
+        ),
     ],
     provider: UserProvider::class,
     stateOptions: new Options(entityClass: \App\Entity\User::class),

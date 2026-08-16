@@ -16,5 +16,10 @@ services:
     App\:
         resource: '../src/'
 
+    App\State\CanonicalUserIriConverter:
+        decorates: 'api_platform.iri_converter'
+        arguments:
+            $decorated: '@App\State\CanonicalUserIriConverter.inner'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
