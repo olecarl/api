@@ -56,6 +56,9 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: 'Password is required.')]
     private ?string $password = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist'])]
+    private ?UserProfile $userProfile = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -123,6 +126,18 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->userProfile;
+    }
+
+    public function setUserProfile(?UserProfile $userProfile): static
+    {
+        $this->userProfile = $userProfile;
 
         return $this;
     }
