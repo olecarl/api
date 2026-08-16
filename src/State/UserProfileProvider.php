@@ -9,6 +9,7 @@ use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\UserProfile as UserProfileResource;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Repository\UserProfileRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 
 /**
@@ -19,10 +20,12 @@ use App\Repository\UserRepositoryInterface;
 final readonly class UserProfileProvider implements ProviderInterface
 {
     /**
-     * @param UserRepositoryInterface<User> $userRepository
+     * @param UserRepositoryInterface<User>               $userRepository
+     * @param UserProfileRepositoryInterface<UserProfile> $userProfileRepository
      */
     public function __construct(
         private UserRepositoryInterface $userRepository,
+        private UserProfileRepositoryInterface $userProfileRepository,
         private UserProvider $userProvider,
     ) {
     }
@@ -42,7 +45,7 @@ final readonly class UserProfileProvider implements ProviderInterface
             return null;
         }
 
-        $profile = $user->getUserProfile();
+        $profile = $this->userProfileRepository->findOneByUser($user);
         if (null === $profile) {
             return null;
         }

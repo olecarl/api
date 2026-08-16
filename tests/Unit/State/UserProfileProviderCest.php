@@ -9,6 +9,7 @@ use ApiPlatform\State\Pagination\Pagination;
 use App\ApiResource\UserProfile as UserProfileResource;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Repository\UserProfileRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use App\State\UserProfileProvider;
 use App\State\UserProvider;
@@ -27,7 +28,10 @@ final class UserProfileProviderCest
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class, [
+            'findOneByUser' => Expected::once($profile),
+        ]);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $resource = $provider->provide(new Get(), ['userId' => $user->getId()]);
 
@@ -41,7 +45,8 @@ final class UserProfileProviderCest
     public function testReturnsNullForMissingUserId(UnitTester $I): void
     {
         $repository = Stub::makeEmpty(UserRepositoryInterface::class);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->assertNull($provider->provide(new Get()));
     }
@@ -51,7 +56,8 @@ final class UserProfileProviderCest
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once(null),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->assertNull($provider->provide(new Get(), ['userId' => Uuid::v4()]));
     }
@@ -62,7 +68,10 @@ final class UserProfileProviderCest
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class, [
+            'findOneByUser' => Expected::once(null),
+        ]);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->assertNull($provider->provide(new Get(), ['userId' => $user->getId()]));
     }
@@ -70,11 +79,13 @@ final class UserProfileProviderCest
     public function testRejectsProfileWithoutUser(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com');
-        $user->setUserProfile(new UserProfile());
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class, [
+            'findOneByUser' => Expected::once(new UserProfile()),
+        ]);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider, $user): void {
             $provider->provide(new Get(), ['userId' => $user->getId()]);
@@ -84,11 +95,14 @@ final class UserProfileProviderCest
     public function testRejectsProfileWithoutIdentifier(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com');
-        $user->setUserProfile((new UserProfile())->setUser($user)->setAbout('Hello, world!'));
+        $profile = (new UserProfile())->setUser($user)->setAbout('Hello, world!');
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class, [
+            'findOneByUser' => Expected::once($profile),
+        ]);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider, $user): void {
             $provider->provide(new Get(), ['userId' => $user->getId()]);
@@ -98,28 +112,33 @@ final class UserProfileProviderCest
     public function testRejectsUserWithoutEmail(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com');
-        $this->createProfile($user, 'Hello, world!');
+        $profile = $this->createProfile($user, 'Hello, world!');
         $email = (new \ReflectionClass($user))->getProperty('email');
         $email->setValue($user, null);
         $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
-        $provider = $this->createProvider($repository);
+        $profileRepository = Stub::makeEmpty(UserProfileRepositoryInterface::class, [
+            'findOneByUser' => Expected::once($profile),
+        ]);
+        $provider = $this->createProvider($repository, $profileRepository);
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider, $user): void {
             $provider->provide(new Get(), ['userId' => $user->getId()]);
         });
     }
 
-    private function createProvider(UserRepositoryInterface $repository): UserProfileProvider
-    {
+    private function createProvider(
+        UserRepositoryInterface $repository,
+        UserProfileRepositoryInterface $profileRepository,
+    ): UserProfileProvider {
         $userProvider = new UserProvider(
             Stub::makeEmpty(UserRepositoryInterface::class),
             new Pagination(),
             Stub::makeEmpty(Security::class),
         );
 
-        return new UserProfileProvider($repository, $userProvider);
+        return new UserProfileProvider($repository, $profileRepository, $userProvider);
     }
 
     /**
