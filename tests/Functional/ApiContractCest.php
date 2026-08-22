@@ -166,6 +166,17 @@ final class ApiContractCest
         $I->assertArrayNotHasKey('/v1/users', $response['paths']);
     }
 
+    public function testOpenApiDocumentsUserProfileSubresource(FunctionalTester $I): void
+    {
+        $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
+        $I->amLoggedInAs($admin, 'api');
+        $I->sendGet('/docs.jsonopenapi');
+
+        $I->seeResponseCodeIs(200);
+        $response = json_decode($I->grabResponse(), true, 512, \JSON_THROW_ON_ERROR);
+        $I->assertArrayHasKey('/users/{userId}/profile', $response['paths']);
+    }
+
     public function testOpenApiDocumentsMeWithoutAnIdentifier(FunctionalTester $I): void
     {
         $admin = $this->createUser($I, 'admin@example.com', 'correct horse battery staple', ['ROLE_ADMIN']);
