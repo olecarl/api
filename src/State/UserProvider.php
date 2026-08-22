@@ -11,7 +11,7 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\User as UserResource;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\UserRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
@@ -21,8 +21,11 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 final readonly class UserProvider implements ProviderInterface
 {
+    /**
+     * @param UserRepositoryInterface<User> $userRepository
+     */
     public function __construct(
-        private UserRepository $userRepository,
+        private UserRepositoryInterface $userRepository,
         private Pagination $pagination,
         private Security $security,
     ) {
@@ -72,7 +75,7 @@ final readonly class UserProvider implements ProviderInterface
         return null === $user ? null : $this->toResource($user);
     }
 
-    private function toResource(User $user): UserResource
+    public function toResource(User $user): UserResource
     {
         $id = $user->getId();
         if (null === $id) {

@@ -10,7 +10,7 @@ use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Pagination\TraversablePaginator;
 use App\ApiResource\User as UserResource;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\UserRepositoryInterface;
 use App\State\UserProvider;
 use App\Tests\Support\UnitTester;
 use Codeception\Stub;
@@ -23,7 +23,7 @@ final class UserProviderCest
     public function testProvidesSingleUserResource(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com', ['ROLE_ADMIN']);
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
         $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
@@ -38,7 +38,7 @@ final class UserProviderCest
 
     public function testReturnsNullForUnknownUser(UnitTester $I): void
     {
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once(null),
         ]);
         $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
@@ -49,7 +49,7 @@ final class UserProviderCest
     public function testProvidesAuthenticatedUserForMeOperation(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com');
-        $repository = Stub::makeEmpty(UserRepository::class);
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class);
         $security = Stub::makeEmpty(Security::class, ['getUser' => Expected::once($user)]);
         $provider = new UserProvider($repository, new Pagination(), $security);
 
@@ -62,7 +62,7 @@ final class UserProviderCest
 
     public function testReturnsNullForMeWithoutAuthenticatedUser(UnitTester $I): void
     {
-        $repository = Stub::makeEmpty(UserRepository::class);
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class);
         $security = Stub::makeEmpty(Security::class, ['getUser' => Expected::once(null)]);
         $provider = new UserProvider($repository, new Pagination(), $security);
 
@@ -73,7 +73,7 @@ final class UserProviderCest
     {
         $first = $this->createUser('first@example.com');
         $second = $this->createUser('second@example.com');
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findBy' => Expected::once([$first, $second]),
         ]);
         $pagination = new Pagination(['enabled' => false]);
@@ -89,7 +89,7 @@ final class UserProviderCest
     public function testProvidesPaginatedCollection(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com');
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findBy' => Expected::once([$user]),
             'count' => Expected::once(3),
         ]);
@@ -111,7 +111,7 @@ final class UserProviderCest
     public function testMapsRolesAsAList(UnitTester $I): void
     {
         $user = $this->createUser('user@example.com', [2 => 'ROLE_ADMIN', 5 => 'ROLE_USER']);
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'findOneBy' => Expected::once($user),
         ]);
         $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
@@ -124,7 +124,7 @@ final class UserProviderCest
     public function testUserWithoutIdentifierIsRejected(UnitTester $I): void
     {
         $user = (new User())->setEmail('user@example.com')->setPassword('hashed-password');
-        $repository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once($user)]);
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once($user)]);
         $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider): void {
@@ -137,7 +137,7 @@ final class UserProviderCest
         $user = $this->createUser('user@example.com');
         $email = (new \ReflectionClass($user))->getProperty('email');
         $email->setValue($user, null);
-        $repository = Stub::makeEmpty(UserRepository::class, ['findOneBy' => Expected::once($user)]);
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, ['findOneBy' => Expected::once($user)]);
         $provider = new UserProvider($repository, new Pagination(), Stub::makeEmpty(Security::class));
 
         $I->expectThrowable(\LogicException::class, static function () use ($provider, $user): void {
@@ -147,7 +147,7 @@ final class UserProviderCest
 
     public function testZeroLimitProducesEmptyPaginatedPage(UnitTester $I): void
     {
-        $repository = Stub::makeEmpty(UserRepository::class, [
+        $repository = Stub::makeEmpty(UserRepositoryInterface::class, [
             'count' => Expected::once(3),
         ]);
         $pagination = new Pagination([
