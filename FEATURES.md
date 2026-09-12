@@ -1,110 +1,143 @@
-# Branch-Features: JWT Authentication
+# Feature Reference
 
-Dieser Branch (`ki/jwt-auth`) erweitert die API um Benutzerkonten, JWT-basierte
-Authentifizierung und eine geschuetzte Benutzerressource.
+This document describes the currently implemented application features. It is
+kept separate from the README so the README can focus on setup and contributor
+orientation while this file provides a compact behavior reference.
 
-## Authentifizierung
+## API Authentication
 
-- `POST /login_check` akzeptiert JSON mit `username` und `password`. Die Route
-  verwendet weder ein `/api`- noch ein `/v1`-Praefix.
-- Bei gueltigen Zugangsdaten wird ein RSA-signiertes JWT mit einer
-  Standardlaufzeit von 3600 Sekunden ausgegeben.
-- API-Anfragen sind stateless und erwarten
-  `Authorization: Bearer <token>`.
-- Fehlgeschlagene Login-Versuche werden auf maximal 5 Versuche pro Minute
-  begrenzt.
-- JWT-Schluessel und die Passphrase werden ueber Umgebungsvariablen bezogen.
-  Die PEM-Dateien bleiben durch `.gitignore` ausserhalb des Repositories.
-- Bei einer neuen lokalen Installation muessen die Schluessel erzeugt werden:
+- `POST /login_check` accepts JSON with `username` and `password`.
+- The `username` value is the user's email address.
+- Successful login returns an RSA-signed JWT.
+- Tokens have a default lifetime of 3600 seconds.
+- API requests are stateless and use `Authorization: Bearer <token>`.
+- Login attempts are limited to five per minute.
+- JWT key paths and the passphrase come from environment variables.
+- Local PEM files are ignored by Git.
 
-  ```bash
-  ddev console lexik:jwt:generate-keypair
-  ```
+Example:
 
-## Benutzerkonto
+```bash
+curl -X POST https://api.ddev.site/login_check \
+    -H 'Content-Type: application/json' \
+    -d '{"username":"user@example.com","password":"your-password"}'
+```
 
-Die Doctrine-Entity `App\\Entity\\User` implementiert
-`UserInterface` und `PasswordAuthenticatedUserInterface`.
+## User Accounts
 
-- UUID als Primaerschluessel
-- E-Mail-Adresse als Login-Identifier und eindeutiger Datenbankwert
-- E-Mail-Normalisierung durch Trim und Kleinschreibung
-- Rollen als JSON-Wert mit implizitem `ROLE_USER`
-- Gehashte Passwoerter, niemals als API-Feld serialisiert
-- Automatische Passwort-Hash-Upgrades ueber `UserRepository`
-- `createdAt` und `updatedAt` ueber `TimestampableTrait`
-- Validierung von E-Mail, Rollen und eindeutiger E-Mail-Adresse. Die Entity
-  verlangt ein nichtleeres Passwort; die CLI erzwingt zusaetzlich mindestens
-  12 Zeichen.
+`App\Entity\User` implements both Symfony user interfaces needed for password
+authentication.
 
-## Benutzer-API
+- UUID primary key
+- Unique email login identifier
+- Email normalization by trimming and lowercasing
+- Stored roles with implicit `ROLE_USER`
+- Hashed passwords
+- Automatic password hash upgrades through `UserRepository`
+- `createdAt` and `updatedAt` through `TimestampableTrait`
+- Validation for email, password, roles, and unique email addresses
 
-Die Resource `App\\ApiResource\\User` ist bewusst schreibgeschuetzt und
-veroeffentlicht keine Passwortdaten.
+The API does not expose the password field. `App\ApiResource\User` is a
+read-only public DTO containing the UUID, email, and roles.
 
-| Methode | Pfad | Berechtigung |
-|---|---|---|
+## User API
+
+| Method | Path | Authorization |
+|--------|------|---------------|
 | `GET` | `/users` | `ROLE_ADMIN` |
-| `GET` | `/users/{uuid}` | Eigener Datensatz oder `ROLE_ADMIN` |
+| `GET` | `/users/{uuid}` | Resource owner or `ROLE_ADMIN` |
+| `GET` | `/me` | Any authenticated API user |
 
-Die Collection unterstuetzt API-Platform-Paginierung mit dem Parameter
-`items` und maximal 50 Eintraegen pro Seite. Der eigene State Provider mappt
-Doctrine-Entities auf das oeffentliche DTO.
+The collection supports API Platform pagination through `items` and `page`.
+The maximum page size is 50. The `/me` operation resolves the user from the
+authenticated JWT and does not accept a user identifier in the path or query
+string.
 
-## Benutzeranlage per CLI
+The custom `UserProvider` maps Doctrine entities to API DTOs. The custom
+`CanonicalUserIriConverter` makes `/me` responses use the canonical
+`/users/{uuid}` IRI in formats that expose resource links.
 
-Der Befehl `app:user:create` legt Benutzer interaktiv an:
+## User Profiles
+
+`App\Entity\UserProfile` is a one-to-one extension of a user:
+
+- UUID primary key
+- Required user relation
+- Optional `about` text
+- Cascade deletion with the user
+- Automatic timestamps
+
+The profile API is read-only:
+
+| Method | Path | Authorization |
+|--------|------|---------------|
+| `GET` | `/users/{userId}/profile` | Profile owner or `ROLE_ADMIN` |
+
+`UserProfileProvider` loads the linked user and profile and returns a profile
+DTO containing a nested public user DTO. A missing user or profile returns 404.
+
+## Browser Dashboard
+
+The browser UI uses Symfony's session-based firewall and is separate from JWT
+API authentication.
+
+- `GET|POST /login` provides a CSRF-protected form login.
+- `GET /dashboard` requires an authenticated user and displays their email,
+  roles, and optional profile text.
+- `POST /logout` is intercepted by the firewall, clears the session, and
+  redirects to `/login`.
+- Anonymous dashboard visitors are redirected to login and returned to their
+  original destination after successful authentication.
+
+## Content Negotiation
+
+API Platform supports:
+
+- JSON-LD: `application/ld+json`
+- HAL: `application/hal+json`
+- JSON:API: `application/vnd.api+json`
+- JSON: `application/json`
+- XML: `application/xml`
+- YAML: `application/x-yaml`
+
+Swagger UI is available at `/docs` in development and test environments. The
+OpenAPI document is available at `/docs.jsonopenapi`. Documentation is public,
+but protected operations still require a JWT. API documentation and the
+profiler are disabled in production.
+
+## Cross-Origin Requests
+
+Nelmio CORS handles requests under `/` and permits configured origins from
+`CORS_ALLOW_ORIGIN`. Supported methods include GET, OPTIONS, POST, PUT, PATCH,
+and DELETE. `Content-Type` and `Authorization` are accepted request headers.
+
+## CLI User Creation
 
 ```bash
 ddev console app:user:create [email] [--role=ROLE_NAME]
 ```
 
-- Die E-Mail kann als Argument uebergeben oder interaktiv eingegeben werden.
-  Passwort und Passwortbestaetigung werden interaktiv und verborgen abgefragt.
-- Im CLI muessen Passwoerter mindestens 12 Zeichen lang sein
-- E-Mail-Adressen werden validiert und normalisiert
-- Rollen koennen mehrfach angegeben werden und muessen dem Format
-  `ROLE_[A-Z][A-Z0-9_]*` entsprechen
-- Nicht-interaktive Ausfuehrung wird abgelehnt, damit Passwoerter nicht in der
-  Shell-History landen
-- Duplikate werden vor dem Schreiben geprueft und zusaetzlich durch den
-  Datenbank-Unique-Index abgesichert
+- The command must run interactively.
+- Email can be supplied as an argument or entered interactively.
+- Password and confirmation are hidden prompts.
+- Passwords must be at least 12 characters.
+- Roles can be repeated and must match `ROLE_[A-Z][A-Z0-9_]*`.
+- Email values are normalized and validated.
+- Duplicate email addresses are checked before persistence and protected by a
+  database unique constraint.
 
-## Datenbank und Migrationen
+## Environments And Quality
 
-- PostgreSQL 17 wird fuer die lokale DDEV-Umgebung verwendet.
-- SQLite wird fuer die Tests verwendet.
-- `Version20260805183440` legt die User-Tabelle an.
-- `Version20260805193807` ergaenzt die Zeitstempel und behandelt SQLite-
-  Tabellenmigrationen separat.
+- DDEV development uses PostgreSQL 17.
+- Tests use SQLite at `data/database_test.sqlite`.
+- Doctrine migrations contain SQLite-specific paths where required.
+- Unit and Functional tests run in CI.
+- Acceptance tests target the live `https://api.ddev.site` environment and are
+  intended for local DDEV runs.
+- PHP CS Fixer, PHPStan, Psalm, container linting, Twig linting, and Doctrine
+  schema validation are part of the development pipeline.
 
-## Qualitaetssicherung
-
-- Codeception Unit- und Functional-Tests decken Entity, Repository, CLI,
-  Validierung und API-Berechtigungen ab.
-- PHP CS Fixer, PHPStan, Psalm und Container-/Schema-Linting sind aktiviert.
-- Codeception-Testabdeckung ist konfiguriert mit einem Zielbereich von 30 bis
-  75 Prozent.
-- OpenAPI/Swagger ist unter `/docs` verfuegbar, wenn die entsprechende
-  Umgebung aktiv ist.
-
-## Review-Hinweise
-
-- Die API-Dokumentation liegt unter dem oeffentlichen `/docs`-Pfad und ist ohne
-  JWT erreichbar. Das wurde bewusst entschieden, damit die Dokumentation ohne
-  vorherige Anmeldung eingesehen werden kann; die eigentlichen API-Endpunkte
-  bleiben weiterhin geschuetzt.
-- Die CI-Konfiguration baut zuerst die Codeception-Suite und fuehrt sie danach
-  einmal aus. Die Acceptance-Tests erwarten dabei weiterhin einen erreichbaren
-  `https://api.ddev.site`-Server; der aktuelle Workflow startet DDEV nicht.
-
-## Browser Dashboard
-
-- Add a `DashboardController` with a protected `GET /dashboard` route.
-- Allow any authenticated user with `ROLE_USER` or `ROLE_ADMIN` to access the dashboard.
-- Use session-based browser authentication for the dashboard without changing JWT authentication for API Platform routes.
-- Redirect unauthenticated dashboard visitors to `/login` and return them to their originally requested page after login.
-- Provide a Twig login page at `/login` with CSRF protection and a generic error for invalid credentials.
-- Display the authenticated user's email address and roles on the dashboard.
-- Provide a CSRF-protected logout action that returns the user to `/login`.
-- Include a link to the API documentation from the dashboard.
+See `tests/Functional/ApiContractCest.php`,
+`tests/Functional/UserResourceCest.php`, and
+`tests/Functional/UserProfileResourceCest.php` for executable examples of the
+API behavior described here.
